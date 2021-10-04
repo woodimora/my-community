@@ -4,41 +4,53 @@
     <meta charset="UTF-8">
     <title>OO게시판</title>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <link rel="stylesheet" href="../static/css/style.css">
-    <script src="indexjs.js"></script>
+    <!-- Font Awesome CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/js/basic.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <nav class="top-item is-fixed-top">
-    <div class="button top-title">
+    <div class="button top-title" th:onclick="home()">
         <figure class="image is-48x48" style="margin: auto;">
-            <img class="is-rounded" src="../static/images/logo.png">
-        </figure></div></div>
+            <img class="is-rounded" src="/images/logo.png">
+        </figure>
+    </div>
+    </div>
 </nav>
 
 <figure class="image is-128x128" style="margin: auto;">
-    <img class="is-rounded" src="../static/images/spring_rtan.png">
+    <img class="is-rounded" src="/images/spring_rtan.png">
 </figure>
-<section class="login-box">
-<form class="box">
-    <div class="field">
-        <label class="label">ID</label>
-        <div class="control">
-            <input class="input" id="user_id" placeholder="아이디를 입력하세요">
+
+<section class="main-contents">
+    <div class="login-box">
+        <div class="box">
+            <form action="/user/login" method="post">
+                <div class="field">
+                    <label class="label">ID</label>
+                    <div class="control">
+                        <input class="input" name="username" id="login-id" placeholder="아이디를 입력하세요">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Password</label>
+                    <div class="control">
+                        <input class="input" name="password" id="login-password" type="password" placeholder="********">
+                    </div>
+                </div>
+                <p class="help is-danger is-hidden" id="login-error">로그인에 실패하였습니다.</p>
+                <button class="button is-primary button-login is-fullwidth" th:onclick="login_submit()">로그인</button>
+            </form>
+            <button class="button is-warning is-fullwidth" th:onclick="login_kakao()">카카오로 로그인하기</button>
+            <p>회원이 아니신가요? <a th:onclick="registerForm()">회원가입</a></p>
         </div>
     </div>
-
-    <div class="field">
-        <label class="label">Password</label>
-        <div class="control">
-            <input class="input" id="password" type="password" placeholder="********">
-        </div>
-    </div>
-
-    <button class="button is-primary button-login is-fullwidth">로그인</button>
-    <button class="button is-warning is-fullwidth">카카오로 로그인하기</button>
-</form>
 </section>
 </body>
 
@@ -49,4 +61,12 @@
         </p>
     </div>
 </footer>
+
+<script>
+    const href = location.href;
+    const queryString = href.substring(href.indexOf("?")+1)
+    if (queryString === 'error') {
+        $('#login-error').removeClass("is-hidden")
+    }
+</script>
 </html>

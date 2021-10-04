@@ -7,17 +7,17 @@
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <!-- Font Awesome CSS -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="indexjs.js"></script>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <script src="/js/basic.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <nav class="top-item is-fixed-top">
-    <div class="button top-title">
+    <div class="button top-title" th:onclick="home()">
         <figure class="image is-48x48" style="margin: auto;">
-            <img class="is-rounded" src="../static/images/logo.png">
+            <img class="is-rounded" src="/images/logo.png">
         </figure>
     </div>
     <ul class="top-ul">
