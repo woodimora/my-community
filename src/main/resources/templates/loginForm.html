@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OO게시판</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <script src="indexjs.js"></script>
+</head>
+<body>
+<nav class="top-item is-fixed-top">
+    <div class="button top-title">
+        <figure class="image is-48x48" style="margin: auto;">
+            <img class="is-rounded" src="../static/images/logo.png">
+        </figure></div></div>
+</nav>
+
+<figure class="image is-128x128" style="margin: auto;">
+    <img class="is-rounded" src="../static/images/spring_rtan.png">
+</figure>
+<section class="login-box">
+<form class="box">
+    <div class="field">
+        <label class="label">ID</label>
+        <div class="control">
+            <input class="input" id="user_id" placeholder="아이디를 입력하세요">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+            <input class="input" id="password" type="password" placeholder="********">
+        </div>
+    </div>
+
+    <button class="button is-primary button-login is-fullwidth">로그인</button>
+    <button class="button is-warning is-fullwidth">카카오로 로그인하기</button>
+</form>
+</section>
+</body>
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>
+            <strong>Blog</strong> by <a href="https://github.com/woodimora">https://github.com/woodimora</a>.
+        </p>
+    </div>
+</footer>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OO게시판</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="indexjs.js"></script>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+<nav class="top-item is-fixed-top">
+    <div class="button top-title">
+        <figure class="image is-48x48" style="margin: auto;">
+            <img class="is-rounded" src="../static/images/logo.png">
+        </figure>
+    </div>
+    <ul class="top-ul">
+        <li class="button is-primary is-light top-button-login">로그인</li>
+        <li class="button is-link is-light top-button-login">회원가입</li>
+        <li class="button is-error is-danger top-button-logout">로그아웃</li>
+    </ul>
+</nav>
+
+<!--  상단바 끝  -->
+
+<section class="main-contents">
+    <div class="box">
+        <div class="post">
+        <div class="post-item">
+            <button class="button is-success" onclick="post_save()">저장</button>
+            <button class="button" onclick="post_cancel()">취소</button>
+        </div>
+        <div class="control post-item">
+            제목<input class="input" type="text" placeholder="제목" id="title">
+        </div>
+            본문<textarea class="textarea" placeholder="내용" rows="10" id="contents"></textarea>
+        </div>
+    </div>
+</section>
+</body>
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>
+            <strong>Blog</strong> by <a href="https://github.com/woodimora">https://github.com/woodimora</a>.
+        </p>
+    </div>
+</footer>
+</html>

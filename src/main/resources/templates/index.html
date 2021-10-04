@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OO게시판</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="indexjs.js"></script>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+<nav class="top-item is-fixed-top">
+    <div class="button top-title">
+        <figure class="image is-48x48" style="margin: auto;">
+            <img class="is-rounded" src="../static/images/logo.png">
+        </figure></div></div>
+    <ul class="top-ul">
+        <li class="button is-primary is-light top-button-login">로그인</li>
+        <li class="button is-link is-light top-button-login">회원가입</li>
+        <li class="button is-error is-danger top-button-logout">로그아웃</li>
+    </ul>
+</nav>
+
+<!--  상단바 끝  -->
+<section class="main-contents">
+    <button class="button is-info" onclick="">글 작성하기</button>
+    <div class="post-list-sector">
+        <div class="box post-card">
+            <article class="media">
+                <div class="media-left">
+                    <figure class="image is-64x64" style="margin: auto;">
+                        <img class="is-rounded" src="../static/images/rtan_heart.png">
+                    </figure>
+                </div>
+                <div class="media-content">
+                    <div class="content">
+                        <strong style="font-size: 20px">제목</strong>
+                        <small>@닉네임</small>
+                        <p>
+                            <small>2021.10.04</small>
+                        </p>
+                    </div>
+                    <nav class="level is-mobile">
+                        <div class="level-left">
+<!--                            <a class="level-item" aria-label="reply">-->
+<!--                                <span class="icon is-small">-->
+<!--                                  <i class="fas fa-reply" aria-hidden="true"></i>-->
+<!--                                </span>-->
+<!--                            </a>-->
+<!--                            <a class="level-item" aria-label="retweet">-->
+<!--                                <span class="icon is-small">-->
+<!--                                  <i class="fas fa-retweet" aria-hidden="true"></i>-->
+<!--                                </span>-->
+<!--                            </a>-->
+<!--                            <a class="level-item" aria-label="like">-->
+<!--                                <span class="icon is-small">-->
+<!--                                  <i class="fas fa-heart" aria-hidden="true"></i>-->
+<!--                                </span>-->
+<!--                            </a>-->
+                                댓글 : 3
+                        </div>
+                        <div class="level-right">
+                            조회수 : 1
+                        </div>
+                    </nav>
+                </div>
+
+                <div class="media-right">
+                    <button class="delete"></button>
+                </div>
+            </article>
+        </div>
+    </div>
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <!--    <a class="pagination-previous">Previous</a>-->
+        <!--    <a class="pagination-next">Next page</a>-->
+        <ul class="pagination-list" id="pagination-ul">
+            <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
+            <li><span class="pagination-ellipsis">&hellip;</span></li>
+            <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
+            <li><a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a></li>
+            <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
+            <li><span class="pagination-ellipsis">&hellip;</span></li>
+            <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+        </ul>
+    </nav>
+</section>
+</body>
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>
+            <strong>Blog</strong> by <a href="https://github.com/woodimora">https://github.com/woodimora</a>.
+        </p>
+    </div>
+</footer>
+
+</html>
