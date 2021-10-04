@@ -15,14 +15,14 @@
 </head>
 <body>
 <nav class="top-item is-fixed-top">
-    <div class="button top-title" th:onclick="home()">
+    <div class="top-title" th:onclick="home()">
         <figure class="image is-48x48" style="margin: auto;">
             <img class="is-rounded" src="images/logo.png">
         </figure></div>
     <ul class="top-ul">
-        <li class="button is-primary is-light top-button-login">로그인</li>
-        <li class="button is-link is-light top-button-login">회원가입</li>
-        <li class="button is-error is-danger top-button-logout">로그아웃</li>
+        <li class="button is-primary is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}" th:onclick="loginForm()">로그인</li>
+        <li class="button is-link is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}" th:onclick="registerForm()">회원가입</li>
+        <li class="button is-error is-danger top-button-logout" th:if="${#authorization.expr('isAuthenticated()')}" onclick="window.location.replace('/user/logout')">로그아웃</li>
     </ul>
 </nav>
 

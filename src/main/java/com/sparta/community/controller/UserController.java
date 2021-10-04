@@ -31,7 +31,7 @@ public class UserController {
     @PostMapping("/user/register/dup-id")
     @ResponseBody
     public String dupCheckId(@RequestBody UserRequestDto requestDto) {
-        if(userService.checkDupId(requestDto)){
+        if (userService.checkDupId(requestDto)) {
             return "success";
         }
         return "fail";
@@ -40,14 +40,14 @@ public class UserController {
     @PostMapping("/user/register/dup-nickname")
     @ResponseBody
     public String dupCheckNickname(@RequestBody UserRequestDto requestDto) {
-        if(userService.checkDupNickname(requestDto)){
+        if (userService.checkDupNickname(requestDto)) {
             return "success";
         }
         return "fail";
     }
 
     @PostMapping("/user/register")
-    public String register(@RequestBody UserRequestDto requestDto){
+    public String register(@RequestBody UserRequestDto requestDto) {
         userService.registerUser(requestDto);
         return "redirect:/";
     }

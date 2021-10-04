@@ -15,7 +15,7 @@
 </head>
 <body>
 <nav class="top-item is-fixed-top">
-    <div class="button top-title" th:onclick="home()">
+    <div class="top-title" th:onclick="home()">
         <figure class="image is-48x48" style="margin: auto;">
             <img class="is-rounded" src="/images/logo.png">
         </figure>
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <p class="help is-danger is-hidden" id="login-error">로그인에 실패하였습니다.</p>
-                <button class="button is-primary button-login is-fullwidth" th:onclick="login_submit()">로그인</button>
+                <button class="button is-primary button-login is-fullwidth">로그인</button>
             </form>
             <button class="button is-warning is-fullwidth" th:onclick="login_kakao()">카카오로 로그인하기</button>
             <p>회원이 아니신가요? <a th:onclick="registerForm()">회원가입</a></p>

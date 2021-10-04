@@ -3,13 +3,13 @@
     justify-content: space-between;
     align-items : center;
     height: 5vh;
+
+    min-height: 52px;
 }
 
 .top-title {
     color: black;
-    border: none;
-    font-size: 1.8vh;
-    font-weight: bold;
+    cursor: pointer;
 }
 
 .top-ul {
@@ -22,7 +22,6 @@
 
 .top-button-logout {
     margin-right: 10px;
-    display: none;
 }
 
 .main-contents {
