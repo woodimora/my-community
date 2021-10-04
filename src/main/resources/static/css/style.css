@@ -1,0 +1,79 @@
+.top-item {
+    display: flex;
+    justify-content: space-between;
+    align-items : center;
+    height: 5vh;
+}
+
+.top-title {
+    color: black;
+    border: none;
+    font-size: 1.8vh;
+    font-weight: bold;
+}
+
+.top-ul {
+    margin-left: auto;
+}
+
+.top-button-login {
+    margin-right: 10px;
+}
+
+.top-button-logout {
+    margin-right: 10px;
+    display: none;
+}
+
+.main-contents {
+    margin: auto;
+    width: 50%;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    min-height: 80vh;
+    min-width: 350px;
+}
+.post {
+    margin: 20px;
+}
+
+.post-item{
+    margin-top:10px;
+    margin-bottom: 10px;
+}
+.post-card{
+    cursor: pointer;
+}
+
+.post-list-sector {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.login-box {
+    margin: auto;
+    width: 350px;
+}
+
+.button-login{
+    float: right;
+    margin-bottom: 10px;
+}
+
+.register-box{
+    margin: auto;
+    width: 35%;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    min-height: 80vh;
+    min-width: 350px;
+}
+
+.profile{
+    margin:auto;
+    cursor:pointer;
+}
+
+.textarea{
+    min-height: 100px;
+}

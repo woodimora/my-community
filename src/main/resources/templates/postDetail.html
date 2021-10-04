@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OO게시판</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/js/basic.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="top-item is-fixed-top">
+    <div class="button top-title" th:onclick="home()">
+        <figure class="image is-48x48" style="margin: auto;">
+            <img class="is-rounded" src="images/logo.png">
+        </figure></div>
+    <ul class="top-ul">
+        <li class="button is-primary is-light top-button-login">로그인</li>
+        <li class="button is-link is-light top-button-login">회원가입</li>
+        <li class="button is-error is-danger top-button-logout">로그아웃</li>
+    </ul>
+</nav>
+
+<!--  상단바 끝  -->
+
+<section class="main-contents">
+    <div class="box">
+        <div style="font-size: 30px; margin-bottom: 20px;">제목</div>
+        <article class="media">
+            <figure class="media-left">
+                <figure class="image is-64x64" style="margin: auto;">
+                    <img class="is-rounded" src="images/rtan_heart.png">
+                </figure>
+            </figure>
+            <div class="content" style="margin-top: auto; margin-bottom: auto">
+                <strong>닉네임</strong>
+                <p>
+                    <small>2021.10.04 11:00</small>
+                    <span></span>
+                    <small>조회 3</small>
+                </p>
+            </div>
+        </article>
+        <article class="media">
+            <div class="content">
+                <p>
+                    본문
+                </p>
+
+                <p>
+                    <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                    댓글 : 3
+                </p>
+            </div>
+        </article>
+
+        <article class="media">
+            <figure class="media-left">
+                <figure class="image is-48x48" style="margin: auto;">
+                    <img class="is-rounded" src="images/user.png">
+                </figure>
+            </figure>
+            <div class="media-content">
+                <div class="content">
+                    <p>
+                        <strong>Barbara Middleton</strong>  <small>2021.09.11 10:44</small>
+                        <br>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porta eros lacus, nec ultricies elit blandit non. Suspendisse pellentesque mauris sit amet dolor blandit rutrum. Nunc in tempus turpis.
+                        <br>
+                        <small><a>Reply</a></small>
+                    </p>
+                </div>
+
+                <article class="media">
+                    <figure class="media-left">
+                        <figure class="image is-48x48" style="margin: auto;">
+                            <img class="is-rounded" src="images/user.png">
+                        </figure>
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>Sean Brown</strong> <small>2021.09.11 10:44</small>
+                                <br>
+                                Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam blandit nisl a nulla sagittis, a lobortis leo feugiat.
+                                <br>
+                                <small><a>Reply</a></small>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="media">
+                    <figure class="media-left">
+                        <figure class="image is-48x48" style="margin: auto;">
+                            <img class="is-rounded" src="images/user.png">
+                        </figure>
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>Sean Brown</strong> <small>2021.09.11 10:44</small>
+                                <br>
+                                Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam blandit nisl a nulla sagittis, a lobortis leo feugiat.
+                                <br>
+                                <small><a>Reply</a></small>
+                            </p>
+                        </div>
+                        <article class="media">
+                            <figure class="media-left">
+                                <figure class="image is-48x48" style="margin: auto;">
+                                    <img class="is-rounded" src="images/user.png">
+                                </figure>
+                            </figure>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>Kayli Eunice </strong> <small>2021.09.11 10:44</small>
+                                        <br>
+                                        Sed convallis scelerisque mauris, non pulvinar nunc mattis vel. Maecenas varius felis sit amet magna vestibulum euismod malesuada cursus libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus lacinia non nisl id feugiat.
+                                        <br>
+                                        <small><a>Reply</a></small>
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </article>
+            </div>
+        </article>
+
+        <article class="media">
+            <figure class="media-left">
+                <figure class="image is-64x64" style="margin: auto;">
+                    <img class="is-rounded" src="images/rtan_heart.png">
+                </figure>
+            </figure>
+            <div class="media-content">
+                <div class="field">
+                    <p class="control">
+                        <textarea class="textarea" placeholder="Add a comment..."></textarea>
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <button class="button">Post comment</button>
+                    </p>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+</body>
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>
+            <strong>Blog</strong> by <a href="https://github.com/woodimora">https://github.com/woodimora</a>.
+        </p>
+    </div>
+</footer>
+</html>
