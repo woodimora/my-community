@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,10 +29,12 @@ import java.util.UUID;
 public class KakaoUserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public KakaoUserService(UserRepository userRepository) {
+    public KakaoUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void registerKakaoUser(KakaoUserInfoDto infoDto) {
@@ -42,7 +45,7 @@ public class KakaoUserService {
         }
         String password = UUID.randomUUID().toString();
 
-        User user = new User(infoDto, password);
+        User user = new User(infoDto, passwordEncoder.encode(password));
         userRepository.save(user);
         forceLogin(user);
     }

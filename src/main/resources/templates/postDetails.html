@@ -17,12 +17,19 @@
 <nav class="top-item is-fixed-top">
     <div class="top-title" th:onclick="home()">
         <figure class="image is-48x48" style="margin: auto;">
-            <img class="is-rounded" src="images/logo.png">
-        </figure></div>
+            <img class="is-rounded" src="/images/logo.png">
+        </figure>
+    </div>
     <ul class="top-ul">
-        <li class="button is-primary is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}" th:onclick="loginForm()">로그인</li>
-        <li class="button is-link is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}" th:onclick="registerForm()">회원가입</li>
-        <li class="button is-error is-danger top-button-logout" th:if="${#authorization.expr('isAuthenticated()')}" onclick="logout()">로그아웃</li>
+        <li class="button is-primary is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}"
+            th:onclick="loginForm()">로그인
+        </li>
+        <li class="button is-link is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}"
+            th:onclick="registerForm()">회원가입
+        </li>
+        <li class="button is-error is-danger top-button-logout" th:if="${#authorization.expr('isAuthenticated()')}"
+            onclick="logout()">로그아웃
+        </li>
     </ul>
 </nav>
 
@@ -30,35 +37,39 @@
 
 <section class="main-contents">
     <div class="box">
-        <div style="font-size: 30px; margin-bottom: 20px;">제목</div>
+        <div style="font-size: 30px; margin-bottom: 20px;" th:text="${post.getTitle()}">제목</div>
         <article class="media">
             <figure class="media-left">
                 <figure class="image is-64x64" style="margin: auto;">
-                    <img class="is-rounded" src="images/rtan_heart.png">
+                    <img class="is-rounded" src="images/rtan_heart.png" th:src="${post.getProfileImage()}">
                 </figure>
             </figure>
             <div class="content" style="margin-top: auto; margin-bottom: auto">
-                <strong>닉네임</strong>
+                <strong th:text="${post.getNickname()}">닉네임</strong>
                 <p>
-                    <small>2021.10.04 11:00</small>
+                    <small th:text="${#temporals.format(post.getCreatedAt(),'yyyy-MM-dd HH:mm:ss')}"
+                           style="color: gray;">2021.10.04 11:00</small>
                     <span></span>
-                    <small>조회 3</small>
+                    <small th:text="|조회 ${post.getViewCount()}|" style="color: gray;">조회 3</small>
                 </p>
             </div>
         </article>
         <article class="media">
             <div class="content">
-                <p>
+                <p class="contents-text" th:text="${post.getContents()}">
                     본문
                 </p>
 
-                <p>
+                <p th:text="|댓글 : ${post.getCommnetCount()}|">
                     <i class="fa fa-commenting-o" aria-hidden="true"></i>
                     댓글 : 3
                 </p>
             </div>
         </article>
-
+        <!--본문 끝-->
+        <div th:each="comment : ${post.commentList}">
+            <div th:each="commentchild:${comment.getChild()}"></div>
+        </div>
         <article class="media">
             <figure class="media-left">
                 <figure class="image is-48x48" style="margin: auto;">
@@ -68,9 +79,11 @@
             <div class="media-content">
                 <div class="content">
                     <p>
-                        <strong>Barbara Middleton</strong>  <small>2021.09.11 10:44</small>
+                        <strong>Barbara Middleton</strong> <small>2021.09.11 10:44</small>
                         <br>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porta eros lacus, nec ultricies elit blandit non. Suspendisse pellentesque mauris sit amet dolor blandit rutrum. Nunc in tempus turpis.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porta eros lacus, nec ultricies
+                        elit blandit non. Suspendisse pellentesque mauris sit amet dolor blandit rutrum. Nunc in tempus
+                        turpis.
                         <br>
                         <small><a>Reply</a></small>
                     </p>
@@ -87,7 +100,9 @@
                             <p>
                                 <strong>Sean Brown</strong> <small>2021.09.11 10:44</small>
                                 <br>
-                                Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam blandit nisl a nulla sagittis, a lobortis leo feugiat.
+                                Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque habitant morbi
+                                tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam blandit nisl a
+                                nulla sagittis, a lobortis leo feugiat.
                                 <br>
                                 <small><a>Reply</a></small>
                             </p>
@@ -106,7 +121,9 @@
                             <p>
                                 <strong>Sean Brown</strong> <small>2021.09.11 10:44</small>
                                 <br>
-                                Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam blandit nisl a nulla sagittis, a lobortis leo feugiat.
+                                Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque habitant morbi
+                                tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam blandit nisl a
+                                nulla sagittis, a lobortis leo feugiat.
                                 <br>
                                 <small><a>Reply</a></small>
                             </p>
@@ -122,7 +139,10 @@
                                     <p>
                                         <strong>Kayli Eunice </strong> <small>2021.09.11 10:44</small>
                                         <br>
-                                        Sed convallis scelerisque mauris, non pulvinar nunc mattis vel. Maecenas varius felis sit amet magna vestibulum euismod malesuada cursus libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus lacinia non nisl id feugiat.
+                                        Sed convallis scelerisque mauris, non pulvinar nunc mattis vel. Maecenas varius
+                                        felis sit amet magna vestibulum euismod malesuada cursus libero. Vestibulum ante
+                                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                                        Phasellus lacinia non nisl id feugiat.
                                         <br>
                                         <small><a>Reply</a></small>
                                     </p>

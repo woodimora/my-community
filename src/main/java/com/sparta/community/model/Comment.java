@@ -1,5 +1,6 @@
 package com.sparta.community.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class Comment extends Timestamped{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @Column(nullable = false)
@@ -23,6 +25,7 @@ public class Comment extends Timestamped{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
+    @JsonIgnore
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -77,3 +77,7 @@
 .textarea{
     min-height: 100px;
 }
+
+.contents-text {
+    min-height: 300px;
+}
