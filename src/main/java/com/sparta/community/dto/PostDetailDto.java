@@ -1,6 +1,5 @@
 package com.sparta.community.dto;
 
-import com.sparta.community.model.Comment;
 import com.sparta.community.model.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +21,8 @@ public class PostDetailDto {
     private String profileImage;
     private String title;
     private String contents;
-    private List<Comment> commentList = new ArrayList<>();
-    private int commnetCount;
+    private final List<CommentDto> commentList = new ArrayList<>();
+    private int commentCount;
     private int viewCount;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -37,8 +36,12 @@ public class PostDetailDto {
         this.profileImage = post.getUser().getProfileImage();
         this.title = post.getTitle();
         this.contents = post.getContents();
-        this.commentList = post.getCommentList();
-        this.commnetCount = commentList.size();
+        if (post.getCommentList().size() > 0) {
+            for(int i = 0 ;i < post.getCommentList().size() ; i++){
+                this.commentList.add(new CommentDto(post.getCommentList().get(i)));
+            }
+        }
+        this.commentCount = post.getCommentCount();
         this.viewCount = post.getViewCount();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();

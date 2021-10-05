@@ -81,3 +81,23 @@
 .contents-text {
     min-height: 300px;
 }
+
+
+.modal-content {
+    width: fit-content;
+}
+
+.modal-container {
+    background-color: gray;
+    padding: 1vh;
+    width: fit-content;
+}
+
+.modal-input {
+    width: 75%;
+    margin: auto;
+}
+
+.modal-button {
+    margin: auto;
+}

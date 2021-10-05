@@ -28,6 +28,6 @@ public class PostResponseDto {
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.viewCount = post.getViewCount();
-        this.commentsCount = post.getCommentList().size();
+        this.commentsCount = post.getCommentCount();
     }
 }

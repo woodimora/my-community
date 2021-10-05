@@ -65,4 +65,19 @@ public class PostRestController {
 
         return detailDto;
     }
+
+    @DeleteMapping("/api/posts/{id}")
+    public String deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.deletePost(id, userDetails);
+
+        return "success";
+    }
+
+    @PostMapping("/api/posts/edit/{id}")
+    public String editPost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.editPost(id, requestDto, userDetails);
+
+        return "success";
+    }
+
 }

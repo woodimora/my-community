@@ -1,8 +1,16 @@
 package com.sparta.community.controller;
 
 import com.sparta.community.dto.PostDetailDto;
+import com.sparta.community.dto.PostRequestDto;
+import com.sparta.community.dto.PostResponseDto;
+import com.sparta.community.dto.UserResponseDto;
+import com.sparta.community.model.Post;
+import com.sparta.community.model.UserRoleEnum;
+import com.sparta.community.security.UserDetailsImpl;
 import com.sparta.community.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +36,12 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public String getPostDetail(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String getPostDetail(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletRequest request, HttpServletResponse response, Model model) {
         //게시글 조회수를 위해 현재 쿠키에 담겨져 있는 게시글 id를 확인.
+        if(userDetails != null){
+            model.addAttribute("user",new UserResponseDto(userDetails.getUser()));
+        }
+
         String cookieName = "postId" + id;
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -50,4 +62,12 @@ public class PostController {
 
         return "postDetails";
     }
+
+    @GetMapping("/posts/edit/{id}")
+    private String editForm(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
+        PostResponseDto post = postService.getPost(id, userDetails);
+        model.addAttribute("post", post);
+        return "editPostForm";
+    }
+
 }

@@ -39,10 +39,10 @@ public class User extends Timestamped{
     private String profileImage;
 
     @OneToMany(mappedBy = "user")
-    private List<Post> postList = new ArrayList<>();
+    private final List<Post> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Comment> commentList = new ArrayList<>();
+    private final List<Comment> commentList = new ArrayList<>();
 
     public User(String username, String nickname, String password, String email, String profileImage) {
         this.username = username;

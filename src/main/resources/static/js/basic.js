@@ -207,7 +207,7 @@ function is_email(asValue) {
 }
 
 function is_nickname(asValue) {
-    var regExp = /^[가-힣a-zA-Z0-9_.]{2,10}$/;
+    var regExp = /^[ㅏ-ㅣㄱ-ㅎ가-힣a-zA-Z0-9_.]{2,10}$/;
     return regExp.test(asValue);
 }
 
@@ -269,33 +269,33 @@ function get_posts() {
 
             for (let i = 0; i < response['numberOfElements']; i++) {
                 let post = posts[i];
-                let tempHtml = `
-        <div class="box post-card" onclick="get_post_detail(${post['id']})">
-            <article class="media">
-                <div class="media-left">
-                    <figure class="image is-64x64" style="margin: auto;">
-                        <img class="is-rounded" src="${post['profileImage']}">
-                    </figure>
-                </div>
-                <div class="media-content">
-                    <div class="content">
-                        <strong style="font-size: 20px">${post['title']}</strong>
-                        <small>@${post['nickname']}</small>
-                        <p>
-                            <small style="color: gray;">${date2str(post['createdAt'])}</small>
-                        </p>
-                    </div>
-                    <nav class="level is-mobile">
-                        <div class="level-left">
-                                <small>댓글 : ${post['commentsCount']}</small>
-                        </div>
-                        <div class="level-right">
-                            <small>조회수 : ${post['viewCount']}</small>
-                        </div>
-                    </nav>
-                </div>
-            </article>
-        </div>`
+                let tempHtml =
+                    `<div class="box post-card" onclick="get_post_detail(${post['id']})">
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image is-64x64" style="margin: auto;">
+                                    <img class="is-rounded" src="${post['profileImage']}">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <strong style="font-size: 20px">${post['title']}</strong>
+                                    <small>@${post['nickname']}</small>
+                                    <p>
+                                        <small style="color: gray;">${date2str(post['createdAt'])}</small>
+                                    </p>
+                                </div>
+                                <nav class="level is-mobile">
+                                    <div class="level-left">
+                                            <small>댓글 : ${post['commentsCount']}</small>
+                                    </div>
+                                    <div class="level-right">
+                                        <small>조회수 : ${post['viewCount']}</small>
+                                    </div>
+                                </nav>
+                            </div>
+                        </article>
+                    </div>`
                 $('#post-list').append(tempHtml)
             }
         }

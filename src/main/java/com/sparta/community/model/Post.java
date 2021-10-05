@@ -30,8 +30,7 @@ public class Post extends Timestamped{
     private String contents;
 
     @OneToMany(mappedBy = "post")
-    @JsonIgnore
-    private List<Comment> commentList = new ArrayList<>();
+    private final List<Comment> commentList = new ArrayList<>();
 
     @Column(nullable = false, columnDefinition = "integer default 0")
     private int viewCount;
@@ -50,5 +49,16 @@ public class Post extends Timestamped{
 
     public void updateCommentCount() {
         this.commentCount += 1;
+    }
+
+    public void addComment(Comment comment) {
+        this.commentList.add(comment);
+        comment.updatePost(this);
+        this.commentCount += 1;
+    }
+
+    public void updatePost(String title, String contents) {
+        this.title = title;
+        this.contents = contents;
     }
 }

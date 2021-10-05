@@ -1,7 +1,9 @@
 package com.sparta.community.dto;
 
 import com.sparta.community.model.User;
+import lombok.Getter;
 
+@Getter
 public class UserResponseDto {
     private String username;
     private String nickname;
