@@ -1,11 +1,14 @@
 package com.sparta.community.service;
 
+import com.sparta.community.dto.KakaoUserInfoDto;
 import com.sparta.community.dto.UserRequestDto;
 import com.sparta.community.model.User;
 import com.sparta.community.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class UserService {

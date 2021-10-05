@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Getter
-public class Post {
+public class Post extends Timestamped{
     @Id
     @GeneratedValue
     @Column(name = "post_id")

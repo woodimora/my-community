@@ -1,29 +1,25 @@
 function loginForm() {
-    window.location.replace("/user/login");
+    window.location.href="/user/login";
 }
 
 function home() {
-    window.location.replace("/");
+    window.location.href="/";
 }
 
 function registerForm() {
-    window.location.replace("/user/register");
+    window.location.href="/user/register";
 }
 
 function logout() {
-    window.location.replace("/user/logout");
+    window.location.href="/user/logout";
 }
 
 function postForm() {
-    window.location.replace("/posts/form");
-}
-
-function login() {
-    window.location.replace("/user/login");
+    window.location.href="/posts/form";
 }
 
 function login_kakao() {
-    window.location.replace("https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://localhost:8080/user/kakao/callback&response_type=code");
+    window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://localhost:8080/user/kakao/callback&response_type=code";
 }
 
 function check_dup_id() {
@@ -175,11 +171,13 @@ function register() {
             if(errorMsg === '중복된 아이디를 사용하는 사용자가 존재합니다.') {
                 $('#register_id').addClass('is-danger');
                 $('#id-dup-error').removeClass('is-hidden');
+                $('#id-error').removeClass('is-hidden');
                 $('#id-available').addClass('is-hidden');
             }
             else if(errorMsg === '중복된 별명를 사용하는 사용자가 존재합니다.') {
                 $('#register_nickname').addClass('is-danger');
                 $('#nickname-dup-error').removeClass('is-hidden');
+                $('#nickname-error').removeClass('is-hidden');
                 $('#nickname-available').addClass('is-hidden');
             }
             else if(errorMsg === '중복된 이메일를 사용하는 사용자가 존재합니다.') {

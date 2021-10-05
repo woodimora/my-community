@@ -66,6 +66,7 @@
     padding-bottom: 3vh;
     min-height: 80vh;
     min-width: 350px;
+    max-width: 500px;
 }
 
 .profile{
