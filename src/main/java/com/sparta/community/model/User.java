@@ -1,7 +1,6 @@
 package com.sparta.community.model;
 
 import com.sparta.community.dto.KakaoUserInfoDto;
-import com.sparta.community.dto.UserRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -53,20 +52,12 @@ public class User extends Timestamped{
         this.role = UserRoleEnum.USER;
     }
 
-    public User(UserRequestDto requestDto) {
-        this.username = requestDto.getUsername();
-        this.nickname = requestDto.getNickname();
-        this.password = requestDto.getPassword();
-        this.email = requestDto.getEmail();
-        this.role = UserRoleEnum.USER;
-    }
-
-    public User(KakaoUserInfoDto infoDto, String password) {
+    public User(KakaoUserInfoDto infoDto, String password, String profileImage) {
         this.kakaoId = infoDto.getId();
         this.email = infoDto.getEmail();
         this.password = password;
         this.nickname = infoDto.getNickname();
-        this.profileImage = infoDto.getProfileImage();
+        this.profileImage = profileImage;
         this.role = UserRoleEnum.USER;
     }
 

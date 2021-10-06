@@ -37,7 +37,7 @@ public class KakaoUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerKakaoUser(KakaoUserInfoDto infoDto) {
+    public void registerKakaoUser(KakaoUserInfoDto infoDto, String profileImage) {
         String nickname = infoDto.getNickname();
         User findByNickname = userRepository.findByNickname(nickname).orElse(null);
         if (findByNickname != null) {
@@ -45,7 +45,7 @@ public class KakaoUserService {
         }
         String password = UUID.randomUUID().toString();
 
-        User user = new User(infoDto, passwordEncoder.encode(password));
+        User user = new User(infoDto, passwordEncoder.encode(password), profileImage);
         userRepository.save(user);
         forceLogin(user);
     }
@@ -66,7 +66,7 @@ public class KakaoUserService {
                 forceLogin(findByEmail);
             }
             else {
-                return new KakaoUserInfoDto(kakaoUserInfo.getId(), null, kakaoUserInfo.getEmail(), kakaoUserInfo.getProfileImage());
+                return new KakaoUserInfoDto(kakaoUserInfo.getId(), null, kakaoUserInfo.getEmail());
             }
         }
         else {
@@ -120,15 +120,13 @@ public class KakaoUserService {
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
-        String profile_image = jsonNode.get("properties").has("profile_image") ? jsonNode.get("properties").get("profile_image").asText() : null;
 
         System.out.println("responseBody = " + responseBody);
 
         return new KakaoUserInfoDto(
                 jsonNode.get("id").asLong(),
                 jsonNode.get("properties").get("nickname").asText(),
-                jsonNode.get("kakao_account").get("email").asText(),
-                profile_image
+                jsonNode.get("kakao_account").get("email").asText()
                 );
     }
 
