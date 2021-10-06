@@ -29,6 +29,7 @@
     <ul class="top-ul">
         <li class="button is-primary is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}" th:onclick="loginForm()">로그인</li>
         <li class="button is-link is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}" th:onclick="registerForm()">회원가입</li>
+        <li class="button is-info is-light top-button-profile-edit" th:if="${#authorization.expr('isAuthenticated()')}" onclick="edit_user()">프로필 수정</li>
         <li class="button is-error is-danger top-button-logout" th:if="${#authorization.expr('isAuthenticated()')}" onclick="logout()">로그아웃</li>
     </ul>
 </nav>

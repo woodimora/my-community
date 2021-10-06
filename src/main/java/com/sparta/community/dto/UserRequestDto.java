@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 @Getter
 @NoArgsConstructor
 public class UserRequestDto {
-
     @Size(min = 2, max = 16, message = "아이디를 2~16자 사이로 입력해주세요.")
     private String username;
     @NotBlank(message = "별명을 입력해주세요.")

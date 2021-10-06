@@ -1,6 +1,7 @@
 package com.sparta.community.model;
 
 import com.sparta.community.dto.KakaoUserInfoDto;
+import com.sparta.community.dto.UserRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -64,5 +65,13 @@ public class User extends Timestamped{
 
     public void updateKakaoId(Long id) {
         this.kakaoId = id;
+    }
+
+    public void updateUser(UserRequestDto requestDto, String password) {
+        this.nickname = requestDto.getNickname();
+        this.password = password;
+        this.nickname = requestDto.getNickname();
+        this.email = requestDto.getEmail();
+        this.profileImage = requestDto.getProfileImage();
     }
 }

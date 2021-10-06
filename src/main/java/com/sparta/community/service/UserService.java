@@ -1,14 +1,14 @@
 package com.sparta.community.service;
 
-import com.sparta.community.dto.KakaoUserInfoDto;
 import com.sparta.community.dto.UserRequestDto;
+import com.sparta.community.dto.UserResponseDto;
 import com.sparta.community.model.User;
 import com.sparta.community.repository.UserRepository;
+import com.sparta.community.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -22,20 +22,26 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean checkDupId(UserRequestDto requestDto) {
+    public boolean checkDupId(UserRequestDto requestDto, UserDetailsImpl userDetails) {
         String username = requestDto.getUsername();
         User found = userRepository.findByUsername(username).orElse(null);
         if (found == null) {
+            return true;
+        }
+        else if(userDetails.getUser().getId().equals(found.getId())) {
             return true;
         }
         return false;
     }
 
 
-    public boolean checkDupNickname(UserRequestDto requestDto) {
+    public boolean checkDupNickname(UserRequestDto requestDto, UserDetailsImpl userDetails) {
         String nickname = requestDto.getNickname();
         User found = userRepository.findByNickname(nickname).orElse(null);
         if (found == null) {
+            return true;
+        }
+        else if(userDetails.getUser().getId().equals(found.getId())) {
             return true;
         }
         return false;
@@ -60,5 +66,21 @@ public class UserService {
 
         User user = new User(username, nickname, passwordEncoder.encode(requestDto.getPassword()), requestDto.getEmail(), requestDto.getProfileImage());
         userRepository.save(user);
+    }
+
+    public UserResponseDto getUser(UserDetailsImpl userDetails) {
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 정보가 올바르지 않습니다.")
+        );
+        return new UserResponseDto(user);
+    }
+
+    @Transactional
+    public void updateUser(UserRequestDto requestDto, UserDetailsImpl userDetails) {
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 정보가 올바르지 않습니다.")
+        );
+        String password = passwordEncoder.encode(requestDto.getPassword());
+        user.updateUser(requestDto, password);
     }
 }
