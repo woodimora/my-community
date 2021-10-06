@@ -28,7 +28,11 @@ public class UserService {
         if (found == null) {
             return true;
         }
-        else if(userDetails.getUser().getId().equals(found.getId())) {
+        else if(userDetails == null)
+        {
+            return false;
+        }
+        else if(userDetails.getUser().getId().equals(found.getId())){
             return true;
         }
         return false;
@@ -41,7 +45,11 @@ public class UserService {
         if (found == null) {
             return true;
         }
-        else if(userDetails.getUser().getId().equals(found.getId())) {
+        else if(userDetails == null)
+        {
+            return false;
+        }
+        else if(userDetails.getUser().getId().equals(found.getId())){
             return true;
         }
         return false;
@@ -76,11 +84,17 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(UserRequestDto requestDto, UserDetailsImpl userDetails) {
+    public User updateUser(UserRequestDto requestDto, UserDetailsImpl userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("로그인 정보가 올바르지 않습니다.")
         );
-        String password = passwordEncoder.encode(requestDto.getPassword());
-        user.updateUser(requestDto, password);
+        if(requestDto.getPassword().equals("")){
+            user.updateUser(requestDto);
+        }
+        else {
+            String password = passwordEncoder.encode(requestDto.getPassword());
+            user.updateUser(requestDto, password);
+        }
+        return user;
     }
 }
