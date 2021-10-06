@@ -66,6 +66,7 @@ public class PostRestController {
         return detailDto;
     }
 
+    @Secured(value = UserRoleEnum.Authority.USER)
     @DeleteMapping("/api/posts/{id}")
     public String deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postService.deletePost(id, userDetails);
@@ -73,6 +74,7 @@ public class PostRestController {
         return "success";
     }
 
+    @Secured(value = UserRoleEnum.Authority.USER)
     @PostMapping("/api/posts/edit/{id}")
     public String editPost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postService.editPost(id, requestDto, userDetails);

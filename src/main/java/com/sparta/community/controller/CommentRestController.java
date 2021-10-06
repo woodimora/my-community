@@ -1,9 +1,11 @@
 package com.sparta.community.controller;
 
 import com.sparta.community.dto.CommentRequestDto;
+import com.sparta.community.model.UserRoleEnum;
 import com.sparta.community.security.UserDetailsImpl;
 import com.sparta.community.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,7 @@ public class CommentRestController {
         this.commentService = commentService;
     }
 
+    @Secured(value = UserRoleEnum.Authority.USER)
     @PostMapping("/api/comments")
     public String createComment(@RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (requestDto.getParentId() == null) {
@@ -27,12 +30,14 @@ public class CommentRestController {
         return "redirect:/posts/" + requestDto.getPostId();
     }
 
+    @Secured(value = UserRoleEnum.Authority.USER)
     @PostMapping("/api/comments/{id}")
     public String editComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.editComment(id, requestDto, userDetails);
         return "success";
     }
 
+    @Secured(value = UserRoleEnum.Authority.USER)
     @DeleteMapping("/api/comments/{id}")
     public String deleteComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.deleteComment(id, userDetails);

@@ -4,11 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.community.dto.KakaoUserInfoDto;
 import com.sparta.community.dto.UserRequestDto;
 import com.sparta.community.dto.UserResponseDto;
+import com.sparta.community.model.User;
+import com.sparta.community.model.UserRoleEnum;
 import com.sparta.community.security.UserDetailsImpl;
 import com.sparta.community.service.KakaoUserService;
 import com.sparta.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,16 +40,35 @@ public class UserController {
         this.kakaoUserService = kakaoUserService;
     }
 
+    @GetMapping("/login")
+    public String loginError(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if(userDetails != null)
+        {
+            return "alreadyLogin";
+        }
+        return "loginNecessary";
+    }
+
+
     @GetMapping("/user/login")
-    public String loginForm() {
+    public String loginForm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if(userDetails != null)     //로그인이 되어있는 경우
+        {
+            return "alreadyLogin";
+        }
         return "loginForm";
     }
 
     @GetMapping("/user/register")
-    public String registerForm() {
+    public String registerForm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if(userDetails != null)
+        {
+            return "alreadyLogin";
+        }
         return "userRegisterForm";
     }
 
+    @Secured(value = UserRoleEnum.Authority.USER)
     @GetMapping("/user/edit")
     public String editForm(@AuthenticationPrincipal UserDetailsImpl userDetails,Model model) {
         UserResponseDto responseDto = userService.getUser(userDetails);
@@ -50,23 +76,14 @@ public class UserController {
         return "userEditForm";
     }
 
+    @Secured(value = UserRoleEnum.Authority.USER)
     @PostMapping("/user/edit")
-    public String editUser(@RequestParam("username") String username,
-                           @RequestParam("nickname") String nickname,
-                           @RequestParam("password") String password,
-                           @RequestParam("email") String email,
-                           @RequestParam("profileImage") String profileImage,
+    public String editUser(@RequestBody UserRequestDto requestDto,
                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String fileName;
-        if(!profileImage.equals("https://bulma.io/images/placeholders/128x128.png")){
-            fileName = saveProfileImage(profileImage);
-        }
-        else {
-            fileName = profileImage;
-        }
-        UserRequestDto requestDto = new UserRequestDto(username, nickname, password, email, fileName);
-
-        userService.updateUser(requestDto, userDetails);
+        String fileName = getFileName(requestDto.getProfileImage());
+        requestDto.updateProfileImageUrl(fileName);
+        User user = userService.updateUser(requestDto, userDetails);
+        forceLogin(user);
         return "redirect:/";
     }
 
@@ -89,23 +106,9 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-//    public String register(@RequestBody UserRequestDto requestDto) {
-    public String register(@RequestParam("username") String username,
-                           @RequestParam("nickname") String nickname,
-                           @RequestParam("password") String password,
-                           @RequestParam("email") String email,
-                           @RequestParam("profileImage") String profileImage
-                           ) {
-        String fileName;
-        if(!profileImage.equals("https://bulma.io/images/placeholders/128x128.png")){
-            fileName = saveProfileImage(profileImage);
-        }
-        else {
-            fileName = profileImage;
-        }
-        UserRequestDto requestDto = new UserRequestDto(username, nickname, password, email, fileName);
-
-//        System.out.println("requestDto = " + requestDto);
+    public String register(@RequestBody UserRequestDto requestDto) {
+        String fileName = getFileName(requestDto.getProfileImage());
+        requestDto.updateProfileImageUrl(fileName);
         userService.registerUser(requestDto);
         return "redirect:/";
     }
@@ -124,38 +127,41 @@ public class UserController {
     }
 
     @PostMapping("/user/register/kakao")
-    public String registerBykakao(@RequestParam("id") Long id,
-                                  @RequestParam("email") String email,
-                                  @RequestParam("nickname") String nickname,
-                                  @RequestParam("profileImage") String profileImage) {
-        String fileName;
-        if(!profileImage.equals("https://bulma.io/images/placeholders/128x128.png")){
-            fileName = saveProfileImage(profileImage);
-        }
-        else {
-            fileName = profileImage;
-        }
-        KakaoUserInfoDto infoDto = new KakaoUserInfoDto(id, nickname, email, fileName);
-//        System.out.println("infoDto = " + infoDto);
+    public String registerBykakao(@RequestBody KakaoUserInfoDto infoDto) {
+        String fileName = getFileName(infoDto.getProfileImage());
+        infoDto.updateProfileImageUrl(fileName);
         kakaoUserService.registerKakaoUser(infoDto);
         return "redirect:/";
     }
 
+    private String getFileName(String profileImage) {
+        return saveProfileImage(profileImage);
+    }
+
     private String saveProfileImage(String profileImage) {
-        String data = profileImage.split(",")[1];
-        byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
-        String fileName = "/profile/" + UUID.randomUUID() + ".png";
-        String filePath = "." + fileName;
-        System.out.println("filePath = " + filePath);
-        try {
-
-            BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(imageBytes));
-            ImageIO.write(bufImg, "png", new File(filePath));
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        String fileName;
+        try{
+            String data = profileImage.split(",")[1];
+            byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
+            fileName = "/profile/" + UUID.randomUUID() + ".png";
+            String filePath = "." + fileName;
+            System.out.println("filePath = " + filePath);
+            try {
+                BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(imageBytes));
+                ImageIO.write(bufImg, "png", new File(filePath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            fileName = profileImage;
         }
         return fileName;
+    }
+
+    private void forceLogin(User user) {
+        // 4. 강제 로그인 처리
+        UserDetails userDetails = new UserDetailsImpl(user);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
