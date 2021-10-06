@@ -15,10 +15,7 @@ public class KakaoUserInfoDto {
     private String email;
     private String profileImage;
 
-    public KakaoUserInfoDto(KakaoUserInfoDto infoDto, String fileName) {
-        this.id = infoDto.getId();
-        this.nickname = infoDto.getNickname();
-        this.email = infoDto.getEmail();
+    public void updateProfileImageUrl(String fileName) {
         this.profileImage = fileName;
     }
 }
