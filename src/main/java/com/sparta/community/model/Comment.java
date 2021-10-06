@@ -19,6 +19,8 @@ public class Comment extends Timestamped{
     @Column(name = "comment_id")
     private Long id;
 
+    private Long masterId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
@@ -37,12 +39,14 @@ public class Comment extends Timestamped{
     @OneToMany(mappedBy = "parent")
     private final List<Comment> child = new ArrayList<>();
 
-    public Comment(CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+    public Comment(CommentRequestDto requestDto, UserDetailsImpl userDetails, Long postId) {
+        this.masterId = postId;
         this.contents = requestDto.getContents();
         this.user = userDetails.getUser();
     }
 
     public void addComment(Comment child){
+        this.masterId = child.masterId;
         this.child.add(child);
         child.updateParent(this);
     }

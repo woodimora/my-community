@@ -30,9 +30,18 @@ public class PostController {
         this.postService = postService;
     }
 
+    @Secured(value = UserRoleEnum.Authority.USER)
     @GetMapping("/post-form")
     public String postForm() {
         return "postForm";
+    }
+
+    @Secured(value = UserRoleEnum.Authority.USER)
+    @GetMapping("/posts/edit/{id}")
+    public String editForm(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
+        PostResponseDto post = postService.getPost(id, userDetails);
+        model.addAttribute("post", post);
+        return "editPostForm";
     }
 
     @GetMapping("/posts/{id}")
@@ -62,12 +71,4 @@ public class PostController {
 
         return "postDetails";
     }
-
-    @GetMapping("/posts/edit/{id}")
-    private String editForm(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
-        PostResponseDto post = postService.getPost(id, userDetails);
-        model.addAttribute("post", post);
-        return "editPostForm";
-    }
-
 }
