@@ -1,6 +1,10 @@
 package com.sparta.community.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.community.dto.PostRequestDto;
+import com.sparta.community.security.UserDetailsImpl;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -8,7 +12,8 @@ import java.util.List;
 
 @Entity
 @Getter
-public class Post {
+@NoArgsConstructor
+public class Post extends Timestamped{
     @Id
     @GeneratedValue
     @Column(name = "post_id")
@@ -25,8 +30,35 @@ public class Post {
     private String contents;
 
     @OneToMany(mappedBy = "post")
-    private List<Comment> commentList = new ArrayList<>();
+    private final List<Comment> commentList = new ArrayList<>();
 
-    @Column(nullable = false)
-    private Long viewCount;
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int viewCount;
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int commentCount;
+
+    public Post(PostRequestDto requestDto, UserDetailsImpl userDetails) {
+        this.user = userDetails.getUser();
+        this.title = requestDto.getTitle();
+        this.contents = requestDto.getContents();
+    }
+
+    public void updateViewCount() {
+        this.viewCount += 1;
+    }
+
+    public void updateCommentCount() {
+        this.commentCount += 1;
+    }
+
+    public void addComment(Comment comment) {
+        this.commentList.add(comment);
+        comment.updatePost(this);
+        this.commentCount += 1;
+    }
+
+    public void updatePost(String title, String contents) {
+        this.title = title;
+        this.contents = contents;
+    }
 }

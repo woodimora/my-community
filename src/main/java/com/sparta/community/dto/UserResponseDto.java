@@ -1,12 +1,14 @@
 package com.sparta.community.dto;
 
 import com.sparta.community.model.User;
+import lombok.Getter;
 
+@Getter
 public class UserResponseDto {
     private String username;
     private String nickname;
     private String email;
-    private String kakaoId;
+    private Long kakaoId;
     private String profileImage;
 
 

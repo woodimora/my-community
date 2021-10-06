@@ -15,15 +15,16 @@
 </head>
 <body>
 <nav class="top-item is-fixed-top">
-    <div class="button top-title" th:onclick="home()">
+    <div class="top-title" th:onclick="home()">
         <figure class="image is-48x48" style="margin: auto;">
             <img class="is-rounded" src="/images/logo.png">
         </figure>
     </div>
     <ul class="top-ul">
-        <li class="button is-primary is-light top-button-login">로그인</li>
-        <li class="button is-link is-light top-button-login">회원가입</li>
-        <li class="button is-error is-danger top-button-logout">로그아웃</li>
+        <li class="button is-primary is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}" th:onclick="loginForm()">로그인</li>
+        <li class="button is-link is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}" th:onclick="registerForm()">회원가입</li>
+        <li class="button is-info is-light top-button-profile-edit" th:if="${#authorization.expr('isAuthenticated()')}" onclick="edit_user()">프로필 수정</li>
+        <li class="button is-error is-danger top-button-logout" th:if="${#authorization.expr('isAuthenticated()')}" onclick="logout()">로그아웃</li>
     </ul>
 </nav>
 
@@ -33,8 +34,8 @@
     <div class="box">
         <div class="post">
         <div class="post-item">
-            <button class="button is-success" onclick="post_save()">저장</button>
-            <button class="button" onclick="post_cancel()">취소</button>
+            <button class="button is-success" onclick="save_post()">저장</button>
+            <button class="button" onclick="home()">취소</button>
         </div>
         <div class="control post-item">
             제목<input class="input" type="text" placeholder="제목" id="title">

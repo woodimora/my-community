@@ -1,5 +1,6 @@
 package com.sparta.community.model;
 
+import com.sparta.community.dto.KakaoUserInfoDto;
 import com.sparta.community.dto.UserRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +12,12 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class User {
+public class User extends Timestamped{
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String username;
 
     @Column(nullable = false, unique = true)
@@ -29,7 +30,7 @@ public class User {
     private String email;
 
     @Column(unique = true)
-    private String kakaoId;
+    private Long kakaoId;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -38,10 +39,10 @@ public class User {
     private String profileImage;
 
     @OneToMany(mappedBy = "user")
-    private List<Post> postList = new ArrayList<>();
+    private final List<Post> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Comment> commentList = new ArrayList<>();
+    private final List<Comment> commentList = new ArrayList<>();
 
     public User(String username, String nickname, String password, String email, String profileImage) {
         this.username = username;
@@ -52,11 +53,25 @@ public class User {
         this.role = UserRoleEnum.USER;
     }
 
-    public User(UserRequestDto requestDto) {
-        this.username = requestDto.getUsername();
-        this.nickname = requestDto.getNickname();
-        this.password = requestDto.getPassword();
-        this.email = requestDto.getEmail();
+    public User(KakaoUserInfoDto infoDto, String password) {
+        this.kakaoId = infoDto.getId();
+        this.email = infoDto.getEmail();
+        this.password = password;
+        this.nickname = infoDto.getNickname();
+        this.profileImage = infoDto.getProfileImage();
         this.role = UserRoleEnum.USER;
+    }
+
+
+    public void updateKakaoId(Long id) {
+        this.kakaoId = id;
+    }
+
+    public void updateUser(UserRequestDto requestDto, String password) {
+        this.nickname = requestDto.getNickname();
+        this.password = password;
+        this.nickname = requestDto.getNickname();
+        this.email = requestDto.getEmail();
+        this.profileImage = requestDto.getProfileImage();
     }
 }

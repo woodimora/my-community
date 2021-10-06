@@ -42,6 +42,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/js/**").permitAll()
 // 회원 관리 처리 API 전부를 login 없이 허용
                 .antMatchers("/user/**").permitAll()
+                .antMatchers("/api/**").permitAll()
+                .antMatchers("/posts/**").permitAll()
+                .antMatchers("/favicon.ico").permitAll()
+                .antMatchers("/profile/**").permitAll()
                 .antMatchers("/").permitAll()
 // 그 외 어떤 요청이든 '인증'
                 .anyRequest().authenticated()
@@ -52,6 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/user/login")
 // 로그인 처리 (POST /user/login)
                 .loginProcessingUrl("/user/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
 // 로그인 처리 후 성공 시 URL
                 .defaultSuccessUrl("/")
 // 로그인 처리 후 실패 시 URL

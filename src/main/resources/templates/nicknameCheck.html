@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OO게시판</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/js/basic.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="top-item is-fixed-top">
+    <div class="top-title" th:onclick="home()">
+        <figure class="image is-48x48" style="margin: auto;">
+            <img class="is-rounded" src="/images/logo.png">
+        </figure>
+    </div>
+    </div>
+    <ul class="top-ul">
+        <li class="button is-primary is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}" th:onclick="loginForm()">로그인</li>
+        <li class="button is-link is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}" th:onclick="registerForm()">회원가입</li>
+    </ul>
+</nav>
+
+<!--  상단바 끝  -->
+
+<figure class="image is-128x128" style="margin: auto;">
+    <img class="is-rounded is-hoverable" src="/images/spring_rtan.png">
+</figure>
+<section class="register-box">
+    <div class="box">
+
+        <div class="field">
+            <figure class="media-right profile" id="profile-image-input">
+                <figure class="image is-128x128" style="margin: auto;">
+                    <input class="file-input" type="file" name="resume" style="cursor:pointer;" accept="image/*">
+                    <img class="is-rounded" id="register_profile_image"
+                         style="width: 128px;height: 128px; object-fit: cover"
+                         src="https://bulma.io/images/placeholders/128x128.png">
+                </figure>
+            </figure>
+        </div>
+        <div class="field" style="display: none">
+            <label class="label">ID</label>
+            <div class="field is-grouped">
+                <div class="control is-expanded">
+                    <input class="input" type="text" id="kakao_register_id" placeholder="ID" th:value="${user.getId()}">
+                </div>
+                <div class="control">
+                    <a class="button is-info" th:onclick="check_dup_id()">
+                        중복 확인
+                    </a>
+                </div>
+            </div>
+            <p class="help is-danger is-hidden" id="id-error">올바른 아이디를 입력하세요. 영소문자, 영대문자, 숫자, 2~16자리</p>
+            <p class="help is-danger is-hidden" id="id-dup-error">동일한 아이디가 존재합니다.</p>
+            <p class="help is-success is-hidden" id="id-available">사용가능한 아이디 입니다.</p>
+        </div>
+        <div class="field">
+            <label class="label">별명</label>
+            <div class="field is-grouped">
+                <div class="control is-expanded">
+                    <input class="input" type="text" placeholder="별명" id="kakao_register_nickname"
+                           th:value="${user.getNickname()}">
+                </div>
+                <div class="control">
+                    <a class="button is-info" th:onclick="check_dup_kakao_nickname()">
+                        중복 확인
+                    </a>
+                </div>
+            </div>
+            <p class="help is-danger is-hidden" id="kakao_nickname-error">올바른 별명을 입력하세요. 영소문자, 영대문자, 숫자, 한글, 2~10자리</p>
+            <p class="help is-danger is-hidden" id="kakao_nickname-dup-error">동일한 별명이 존재합니다.</p>
+            <p class="help is-success is-hidden" id="kakao_nickname-available">사용가능한 별명 입니다.</p>
+        </div>
+
+        <div class="field" style="display: none">
+            <label class="label">Password</label>
+            <div class="control has-icons-left has-icons-right">
+                <input class="input " type="password" id="register_password1" placeholder="password">
+                <span class="icon is-small is-left">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                </span>
+                <span class="icon is-small is-right">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                </span>
+            </div>
+            <p class="help">비밀번호는 영문-숫자 조합 필수, 영소문자, 영대문자, 숫자, 특수문자 [!@#$%^&*], 공백제외 12~32자리</p>
+            <p class="help is-danger is-hidden" id="password1-error">사용할 수 없는 비밀번호 입니다.</p>
+        </div>
+
+        <div class="field" style="display: none">
+            <label class="label">Check Password</label>
+            <div class="control has-icons-left has-icons-right">
+                <input class="input " type="password" id="register_password2" placeholder="password">
+                <span class="icon is-small is-left">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                </span>
+                <span class="icon is-small is-right">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                </span>
+            </div>
+            <p class="help is-danger is-hidden" id="password2-error">비밀번호가 동일하지 않습니다.</p>
+        </div>
+
+        <div class="field" style="display: none">
+            <label class="label">Email</label>
+            <div class="control has-icons-left has-icons-right">
+                <input class="input " type="email" id="kakao_register_email" placeholder="Email"
+                       th:value="${user.getEmail()}">
+                <span class="icon is-small is-left">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                </span>
+                <span class="icon is-small is-right">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                 </span>
+            </div>
+            <p class="help is-danger is-hidden" id="email-error">올바른 메일 형식이 아닙니다.</p>
+            <p class="help is-danger is-hidden" id="email-dup-error">이미 존재하는 이메일입니다.</p>
+        </div>
+
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-link" th:onclick="register_kakao()">회원가입</button>
+            </div>
+            <div class="control">
+                <button class="button is-link is-light" th:onclick="home()">취소</button>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function readURL(input) {
+        // console.log(input.files)
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#register_profile_image').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $(".file-input").change(function () {
+        readURL(this);
+    });
+
+    function register_kakao() {
+        let nickname = $('#kakao_register_nickname').val();
+        let email = $('#kakao_register_email').val();
+        let username = $('#kakao_register_id').val();
+        let profile_image = $('#register_profile_image').attr('src');
+
+
+        if ($('#kakao_nickname-available').hasClass('is-hidden')) {
+            $('#kakao_register_nickname').addClass('is-danger');
+            $('#kakao_nickname-dup-error').addClass('is-hidden');
+            $('#kakao_nickname-error').removeClass('is-hidden');
+            $('#kakao_nickname-available').addClass('is-hidden');
+            return;
+        }
+
+        if (!is_nickname(nickname)) {
+            $('#kakao_register_nickname').addClass('is-danger');
+            $('#kakao_nickname-dup-error').addClass('is-hidden');
+            $('#kakao_nickname-error').removeClass('is-hidden');
+            $('#kakao_nickname-available').addClass('is-hidden');
+            return;
+        }
+
+        // console.log(nickname, email, username, profile_image)
+
+        let formData = new FormData();
+        formData.append('nickname', nickname)
+        formData.append('email', email)
+        formData.append('id', username)
+        formData.append('profileImage', profile_image)
+        $.ajax({
+            type: 'POST',
+            url: '/user/register/kakao',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (request) {
+                alert("회원가입이 되었습니다.")
+                window.location.replace("/")
+            },
+            error: function (response, status, error) {
+                let errorMsg = response['responseJSON']['errorMessage'];
+                if (errorMsg === '중복된 별명를 사용하는 사용자가 존재합니다.') {
+                    $('#kakao_register_nickname').addClass('is-danger');
+                    $('#kakao_nickname-dup-error').removeClass('is-hidden');
+                    $('#kakao_nickname-error').addClass('is-hidden');
+                    $('#kakao_nickname-available').addClass('is-hidden');
+                }
+            }
+        })
+    }
+
+    function check_dup_kakao_nickname() {
+        let nickname = $('#kakao_register_nickname').val();
+
+        //입력 확인
+        if (!is_nickname(nickname)) {
+            $('#kakao_register_nickname').addClass('is-danger');
+            $('#kakao_nickname-dup-error').addClass('is-hidden');
+            $('#kakao_nickname-error').removeClass('is-hidden');
+            $('#kakao_nickname-available').addClass('is-hidden');
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/user/register/dup-nickname',
+            data: JSON.stringify({
+                'nickname': nickname,
+            }),
+            contentType: 'application/json',
+            success: function (response) {
+                if (response === "success") {
+                    $('#kakao_register_nickname').removeClass('is-danger');
+                    $('#kakao_nickname-dup-error').addClass('is-hidden');
+                    $('#kakao_nickname-error').addClass('is-hidden');
+                    $('#kakao_nickname-available').removeClass('is-hidden');
+                } else {
+                    $('#kakao_register_nickname').addClass('is-danger');
+                    $('#kakao_nickname-dup-error').removeClass('is-hidden');
+                    $('#kakao_nickname-error').addClass('is-hidden');
+                    $('#kakao_nickname-available').addClass('is-hidden');
+                }
+            }
+        })
+    }
+</script>
+</body>
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>
+            <strong>Blog</strong> by <a href="https://github.com/woodimora">https://github.com/woodimora</a>.
+        </p>
+    </div>
+</footer>
+</html>
