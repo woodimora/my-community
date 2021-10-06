@@ -37,7 +37,7 @@ public class KakaoUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerKakaoUser(KakaoUserInfoDto infoDto, String profileImage) {
+    public void registerKakaoUser(KakaoUserInfoDto infoDto) {
         String nickname = infoDto.getNickname();
         User findByNickname = userRepository.findByNickname(nickname).orElse(null);
         if (findByNickname != null) {
@@ -45,7 +45,7 @@ public class KakaoUserService {
         }
         String password = UUID.randomUUID().toString();
 
-        User user = new User(infoDto, passwordEncoder.encode(password), profileImage);
+        User user = new User(infoDto, passwordEncoder.encode(password));
         userRepository.save(user);
         forceLogin(user);
     }
@@ -66,7 +66,7 @@ public class KakaoUserService {
                 forceLogin(findByEmail);
             }
             else {
-                return new KakaoUserInfoDto(kakaoUserInfo.getId(), null, kakaoUserInfo.getEmail());
+                return new KakaoUserInfoDto(kakaoUserInfo.getId(), null, kakaoUserInfo.getEmail(), kakaoUserInfo.getProfileImage());
             }
         }
         else {
@@ -83,7 +83,8 @@ public class KakaoUserService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", "34859b74f2e726356d9d9c561f7a8932");
-        body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
+//        body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
+        body.add("redirect_uri", "http://rlobean.shop/user/kakao/callback");
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
@@ -120,14 +121,13 @@ public class KakaoUserService {
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
-
-        System.out.println("responseBody = " + responseBody);
+        String profileImage = "https://bulma.io/images/placeholders/128x128.png";
 
         return new KakaoUserInfoDto(
                 jsonNode.get("id").asLong(),
                 jsonNode.get("properties").get("nickname").asText(),
-                jsonNode.get("kakao_account").get("email").asText()
-                );
+                jsonNode.get("kakao_account").get("email").asText(),
+                profileImage);
     }
 
     private void forceLogin(User kakaoUser) {

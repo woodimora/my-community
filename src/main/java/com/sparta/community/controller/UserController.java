@@ -61,7 +61,17 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public String register(@RequestBody UserRequestDto requestDto) {
+//    public String register(@RequestBody UserRequestDto requestDto) {
+    public String register(@RequestParam("username") String username,
+                           @RequestParam("nickname") String nickname,
+                           @RequestParam("password") String password,
+                           @RequestParam("email") String email,
+                           @RequestParam("profileImage") String profileImage
+                           ) {
+        String fileName = saveProfileImage(profileImage);
+        UserRequestDto requestDto = new UserRequestDto(username, nickname, password, email, fileName);
+
+//        System.out.println("requestDto = " + requestDto);
         userService.registerUser(requestDto);
         return "redirect:/";
     }
@@ -78,16 +88,20 @@ public class UserController {
             return "redirect:/";
         }
     }
-//private Long id;
-//    private String nickname;
-//    private String email;
+
     @PostMapping("/user/register/kakao")
     public String registerBykakao(@RequestParam("id") Long id,
-                                  @RequestParam("nickname") String nickname,
                                   @RequestParam("email") String email,
-                                  @RequestParam("profileImage") String profileImage,
-                                  HttpSession session) {
+                                  @RequestParam("nickname") String nickname,
+                                  @RequestParam("profileImage") String profileImage) {
+        String fileName = saveProfileImage(profileImage);
+        KakaoUserInfoDto infoDto = new KakaoUserInfoDto(id, nickname, email, fileName);
+//        System.out.println("infoDto = " + infoDto);
+        kakaoUserService.registerKakaoUser(infoDto);
+        return "redirect:/";
+    }
 
+    private String saveProfileImage(String profileImage) {
         String data = profileImage.split(",")[1];
         byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
         String fileName = "/profile/" + UUID.randomUUID() + ".png";
@@ -102,13 +116,7 @@ public class UserController {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        String test = "";
-        System.out.println("id = " + id);
-        System.out.println("nickname = " + nickname);
-        System.out.println("email = " + email);
-        System.out.println("profileImage = " + profileImage);
-        kakaoUserService.registerKakaoUser(new KakaoUserInfoDto(id, nickname, email), fileName);
-        return "redirect:/";
+        return fileName;
     }
 
 }

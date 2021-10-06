@@ -52,12 +52,12 @@ public class User extends Timestamped{
         this.role = UserRoleEnum.USER;
     }
 
-    public User(KakaoUserInfoDto infoDto, String password, String profileImage) {
+    public User(KakaoUserInfoDto infoDto, String password) {
         this.kakaoId = infoDto.getId();
         this.email = infoDto.getEmail();
         this.password = password;
         this.nickname = infoDto.getNickname();
-        this.profileImage = profileImage;
+        this.profileImage = infoDto.getProfileImage();
         this.role = UserRoleEnum.USER;
     }
 

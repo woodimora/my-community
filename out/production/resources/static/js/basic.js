@@ -22,6 +22,7 @@ function postForm() {
 
 function login_kakao() {
     window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://localhost:8080/user/kakao/callback&response_type=code";
+    // window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://rlobean.shop/user/kakao/callback&response_type=code";
 }
 
 function check_dup_id() {
@@ -152,18 +153,19 @@ function register() {
         $('#email-dup-error').addClass('is-hidden');
         return;
     }
+    let formData = new FormData();
+    formData.append('username', username);
+    formData.append('nickname', nickname);
+    formData.append('password', password1);
+    formData.append('email', email);
+    formData.append('profileImage', profile_image);
 
     $.ajax({
         type: 'POST',
         url: '/user/register',
-        data: JSON.stringify({
-            'username': username,
-            'nickname': nickname,
-            'password': password1,
-            'email': email,
-            'profileImage': profile_image
-        }),
-        contentType: 'application/json',
+        data: formData,
+        contentType: false,
+        processData: false,
         success: function (request) {
             alert("회원가입이 되었습니다.")
             window.location.replace("/")
@@ -306,14 +308,14 @@ function get_posts() {
 //날짜 변환
 function date2str(dateStr) {
     // 클라이언트 Timezone offset
-    let offset = (new Date()).getTimezoneOffset() * 1000 * 60;
+    let offset = (new Date()).getTimezoneOffset() * 60 * 1000;
     // 서버에서 받은 시간
     let utcTime = new Date(dateStr)
     // 서버 기준시에서 클라이언트의 Timezone offset 을 뺀 시간
     let day = new Date(utcTime - offset);
     // let day = new Date(dateStr);
     let year = `${day.getFullYear()}`;
-    let month = day.getMonth() < 10 ? `0${day.getMonth()}` : `${day.getMonth()}`;
+    let month = day.getMonth() + 1 < 10 ? `0${day.getMonth() + 1}` : `${day.getMonth() + 1}`;
     let date = day.getDate() < 10 ? `0${day.getDate()}` : `${day.getDate()}`;
     let hours = day.getHours() < 10 ? `0${day.getHours()}` : `${day.getHours()}`;
     let minutes = day.getMinutes() < 10 ? `0${day.getMinutes()}` : `${day.getMinutes()}`;

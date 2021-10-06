@@ -88,7 +88,7 @@
                     <i class="fa fa-lock" aria-hidden="true"></i>
                 </span>
             </div>
-            <p class="help">비밀번호는 영문-숫자 조합 필수, 영소문자, 영대문자, 숫자, 특수문자 [!@#$%^&*], 공백제외 12~32자리</p>
+            <p class="help">비밀번호는 영문-숫자 조합 필수, 영소문자, 영대문자, 숫자, 특수문자 [!@#$%^&*], 공백제외 8~32자리</p>
             <p class="help is-danger is-hidden" id="password1-error">사용할 수 없는 비밀번호 입니다.</p>
         </div>
 
@@ -132,6 +132,33 @@
     </div>
 </section>
 <script>
+
+    $(document).ready(function () {
+        setInterval(check_password_same, 1000);
+    })
+    function check_password_same() {
+        let password1 = $('#register_password1').val();
+        let password2 = $('#register_password2').val();
+
+        if (!is_password(password1) && password1.length > 0) {
+            $('#register_password1').addClass('is-danger');
+            $('#password1-error').removeClass('is-hidden');
+        }
+        else {
+            $('#register_password1').removeClass('is-danger');
+            $('#password1-error').addClass('is-hidden');
+        }
+
+        if((password2 !== password1) && password2.length > 0){
+            $('#register_password2').addClass('is-danger');
+            $('#password2-error').removeClass('is-hidden');
+        }
+        else {
+            $('#register_password2').removeClass('is-danger');
+            $('#password2-error').addClass('is-hidden');
+        }
+    }
+
     function readURL(input) {
         console.log(input.files)
         if (input.files && input.files[0]) {

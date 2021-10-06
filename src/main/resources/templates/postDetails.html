@@ -47,7 +47,7 @@
             <div class="content" style="margin-top: auto; margin-bottom: auto">
                 <strong th:text="${post.getNickname()}">닉네임</strong>
                 <p>
-                    <small th:text="${#temporals.format(post.getCreatedAt(),'yyyy-MM-dd HH:mm:ss')}"
+                    <small id="detail_date"
                            style="color: gray;">2021.10.04 11:00</small>
                     <small th:text="|조회 ${post.getViewCount()}|" style="color: gray;margin-left:20px">조회 3</small>
                 </p>
@@ -115,8 +115,9 @@
 </div>
 <script th:inline="javascript">
     $(document).ready(function () {
-        $('#comment-container').empty()
         let post = [[${post}]];
+        $('#detail_date').text(date2str(post['createdAt']))
+        $('#comment-container').empty()
         console.log(post)
         let comments = post['commentList']
         let temp_html = '';

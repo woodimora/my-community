@@ -40,7 +40,7 @@
         <div class="post">
             <div class="post-item">
                 <button class="button is-success" th:onclick=|edit_post("${post.getId()}")|>저장</button>
-                <button class="button" onclick="window.location.back()">취소</button>
+                <button class="button" th:href=|/posts/"${post.getId()}"|>취소</button>
             </div>
             <div class="control post-item">
                 제목<input class="input" type="text" placeholder="제목" id="edit_title" th:value="${post.getTitle()}">

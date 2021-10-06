@@ -10,6 +10,8 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.File;
+
 @Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
@@ -35,8 +37,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        File file = new File("");
+        String rootPath = "file://" + file.getAbsoluteFile().getPath() + "/profile/";
+        System.out.println("rootPath = " + rootPath);
         registry.addResourceHandler("/profile/**")
-                .addResourceLocations("file:///profile/");
+                .addResourceLocations(rootPath);
 
     }
 }

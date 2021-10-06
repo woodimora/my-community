@@ -11,7 +11,6 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-@ToString
 public class PostDetailDto {
     private Long id;
     private String username;
