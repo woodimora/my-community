@@ -80,7 +80,7 @@ public class UserController {
     @PostMapping("/user/edit")
     public String editUser(@RequestBody UserRequestDto requestDto,
                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String fileName = getFileName(requestDto.getProfileImage());
+        String fileName = saveProfileImage(requestDto.getProfileImage());
         requestDto.updateProfileImageUrl(fileName);
         User user = userService.updateUser(requestDto, userDetails);
         forceLogin(user);
@@ -107,7 +107,7 @@ public class UserController {
 
     @PostMapping("/user/register")
     public String register(@RequestBody UserRequestDto requestDto) {
-        String fileName = getFileName(requestDto.getProfileImage());
+        String fileName = saveProfileImage(requestDto.getProfileImage());
         requestDto.updateProfileImageUrl(fileName);
         userService.registerUser(requestDto);
         return "redirect:/";
@@ -128,14 +128,10 @@ public class UserController {
 
     @PostMapping("/user/register/kakao")
     public String registerBykakao(@RequestBody KakaoUserInfoDto infoDto) {
-        String fileName = getFileName(infoDto.getProfileImage());
+        String fileName = saveProfileImage(infoDto.getProfileImage());
         infoDto.updateProfileImageUrl(fileName);
         kakaoUserService.registerKakaoUser(infoDto);
         return "redirect:/";
-    }
-
-    private String getFileName(String profileImage) {
-        return saveProfileImage(profileImage);
     }
 
     private String saveProfileImage(String profileImage) {
