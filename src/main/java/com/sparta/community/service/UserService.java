@@ -93,7 +93,7 @@ public class UserService {
         }
         else {
             String password = passwordEncoder.encode(requestDto.getPassword());
-            user.updateUser(requestDto, password);
+            user.updateUserWithPassword(requestDto, password);
         }
         return user;
     }
