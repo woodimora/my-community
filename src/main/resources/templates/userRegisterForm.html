@@ -56,7 +56,7 @@
                     </a>
                 </div>
             </div>
-            <p class="help is-danger is-hidden" id="id-error">올바른 아이디를 입력하세요. 영소문자, 영대문자, 숫자, 2~16자리</p>
+            <p class="help is-danger is-hidden" id="id-error">올바른 아이디를 입력하세요. 영소문자, 영대문자, 숫자, 4~16자리</p>
             <p class="help is-danger is-hidden" id="id-dup-error">동일한 아이디가 존재합니다.</p>
             <p class="help is-success is-hidden" id="id-available">사용가능한 아이디 입니다.</p>
         </div>
@@ -88,7 +88,7 @@
                     <i class="fa fa-lock" aria-hidden="true"></i>
                 </span>
             </div>
-            <p class="help">비밀번호는 영문-숫자 조합 필수, 영소문자, 영대문자, 숫자, 특수문자 [!@#$%^&*], 공백제외 8~32자리</p>
+            <p class="help">비밀번호는 영문-숫자 조합 필수, 영소문자, 영대문자, 숫자, 특수문자 [!@#$%^&*], 공백제외 4~32자리</p>
             <p class="help is-danger is-hidden" id="password1-error">사용할 수 없는 비밀번호 입니다.</p>
         </div>
 
@@ -134,28 +134,76 @@
 <script>
 
     $(document).ready(function () {
-        setInterval(check_password_same, 1000);
+        $('#register_password1').blur(function () {
+            check_register_password1()
+        });
+        $('#register_password2').blur(function () {
+            check_register_password2()
+        });
+        $('#register_email').blur(function () {
+            check_register_email()
+        });
+        $('#register_id').blur(function () {
+            reset_register_id()
+        });
+        $('#register_nickname').blur(function () {
+            reset_register_nickname()
+        });
     })
-    function check_password_same() {
+
+    function reset_register_id() {
+        $('#register_id').removeClass('is-danger');
+        $('#id-error').addClass('is-hidden');
+        $('#id-dup-error').addClass('is-hidden');
+        $('#id-available').addClass('is-hidden');
+    }
+
+    function reset_register_nickname() {
+        $('#register_nickname').removeClass('is-danger');
+        $('#nickname-dup-error').addClass('is-hidden');
+        $('#nickname-error').addClass('is-hidden');
+        $('#nickname-available').addClass('is-hidden');
+    }
+
+    function check_register_password1() {
+        let username = $('#register_id').val();
+        let password1 = $('#register_password1').val();
+
+        if (password1.length > 0) {
+            if (!is_password(password1) || is_contains(password1, username)) {
+                $('#register_password1').addClass('is-danger');
+                $('#password1-error').removeClass('is-hidden');
+            } else {
+                $('#register_password1').removeClass('is-danger');
+                $('#password1-error').addClass('is-hidden');
+            }
+        }
+    }
+
+    function check_register_password2() {
         let password1 = $('#register_password1').val();
         let password2 = $('#register_password2').val();
 
-        if (!is_password(password1) && password1.length > 0) {
-            $('#register_password1').addClass('is-danger');
-            $('#password1-error').removeClass('is-hidden');
+        if (password2.length > 0) {
+            if ((password2 !== password1)) {
+                $('#register_password2').addClass('is-danger');
+                $('#password2-error').removeClass('is-hidden');
+            } else {
+                $('#register_password2').removeClass('is-danger');
+                $('#password2-error').addClass('is-hidden');
+            }
         }
-        else {
-            $('#register_password1').removeClass('is-danger');
-            $('#password1-error').addClass('is-hidden');
-        }
+    }
 
-        if((password2 !== password1) && password2.length > 0){
-            $('#register_password2').addClass('is-danger');
-            $('#password2-error').removeClass('is-hidden');
-        }
-        else {
-            $('#register_password2').removeClass('is-danger');
-            $('#password2-error').addClass('is-hidden');
+    function check_register_email() {
+        let email = $('#register_email').val();
+
+        if (email.length > 0) {
+            if (!is_email(email)) {
+                $('#register_email').addClass('is-danger');
+                $('#email-error').removeClass('is-hidden');
+                $('#email-dup-error').addClass('is-hidden');
+            }
         }
     }
 
@@ -255,7 +303,7 @@
         let email = $('#register_email').val();
         let profile_image = $('#register_profile_image').attr('src');
 
-        if($('#id-available').hasClass('is-hidden')){
+        if ($('#id-available').hasClass('is-hidden')) {
             $('#register_id').addClass('is-danger');
             $('#id-error').removeClass('is-hidden');
             $('#id-dup-error').addClass('is-hidden');
@@ -263,7 +311,7 @@
             return;
         }
 
-        if($('#nickname-available').hasClass('is-hidden')){
+        if ($('#nickname-available').hasClass('is-hidden')) {
             $('#register_nickname').addClass('is-danger');
             $('#nickname-dup-error').addClass('is-hidden');
             $('#nickname-error').removeClass('is-hidden');
@@ -287,7 +335,7 @@
             return;
         }
 
-        if (!is_password(password1)) {
+        if (!is_password(password1) || is_contains(password1, username)) {
             $('#register_password1').addClass('is-danger');
             $('#password1-error').removeClass('is-hidden');
             return;
@@ -299,44 +347,42 @@
             return;
         }
 
-        if (!is_email(email)) {
-            $('#register_email').addClass('is-danger');
-            $('#email-error').removeClass('is-hidden');
-            $('#email-dup-error').addClass('is-hidden');
-            return;
+        if (email.length > 0) {
+            if (!is_email(email)) {
+                $('#register_email').addClass('is-danger');
+                $('#email-error').removeClass('is-hidden');
+                $('#email-dup-error').addClass('is-hidden');
+                return;
+            }
         }
-        let formData = new FormData();
-        formData.append('username', username);
-        formData.append('nickname', nickname);
-        formData.append('password', password1);
-        formData.append('email', email);
-        formData.append('profileImage', profile_image);
-
         $.ajax({
             type: 'POST',
             url: '/user/register',
-            data: formData,
-            contentType: false,
-            processData: false,
+            data: JSON.stringify({
+                'username': username,
+                'nickname': nickname,
+                'password': password1,
+                'email': email,
+                'profileImage': profile_image
+            }),
+            contentType: 'application/json',
             success: function (request) {
                 alert("회원가입이 되었습니다.")
                 window.location.replace("/")
             },
-            error: function (response,status,error) {
+            error: function (response, status, error) {
                 let errorMsg = response['responseJSON']['errorMessage'];
-                if(errorMsg === '중복된 아이디를 사용하는 사용자가 존재합니다.') {
+                if (errorMsg === '중복된 아이디를 사용하는 사용자가 존재합니다.') {
                     $('#register_id').addClass('is-danger');
                     $('#id-dup-error').removeClass('is-hidden');
                     $('#id-error').removeClass('is-hidden');
                     $('#id-available').addClass('is-hidden');
-                }
-                else if(errorMsg === '중복된 별명를 사용하는 사용자가 존재합니다.') {
+                } else if (errorMsg === '중복된 별명를 사용하는 사용자가 존재합니다.') {
                     $('#register_nickname').addClass('is-danger');
                     $('#nickname-dup-error').removeClass('is-hidden');
                     $('#nickname-error').removeClass('is-hidden');
                     $('#nickname-available').addClass('is-hidden');
-                }
-                else if(errorMsg === '중복된 이메일를 사용하는 사용자가 존재합니다.') {
+                } else if (errorMsg === '중복된 이메일를 사용하는 사용자가 존재합니다.') {
                     $('#register_email').addClass('is-danger');
                     $('#email-error').addClass('is-hidden');
                     $('#email-dup-error').removeClass('is-hidden');

@@ -22,7 +22,9 @@
     </div>
     </div>
     <ul class="top-ul">
-        <li class="button is-error is-danger top-button-logout" th:if="${#authorization.expr('isAuthenticated()')}" onclick="logout()">로그아웃</li>
+        <li class="button is-error is-danger top-button-logout" th:if="${#authorization.expr('isAuthenticated()')}"
+            onclick="logout()">로그아웃
+        </li>
     </ul>
 </nav>
 
@@ -56,7 +58,7 @@
                     </a>
                 </div>
             </div>
-            <p class="help is-danger is-hidden" id="edit_id-error">올바른 아이디를 입력하세요. 영소문자, 영대문자, 숫자, 2~16자리</p>
+            <p class="help is-danger is-hidden" id="edit_id-error">올바른 아이디를 입력하세요. 영소문자, 영대문자, 숫자, 4~16자리</p>
             <p class="help is-danger is-hidden" id="edit_id-dup-error">동일한 아이디가 존재합니다.</p>
             <p class="help is-success is-hidden" id="edit_id-available">사용가능한 아이디 입니다.</p>
         </div>
@@ -64,7 +66,8 @@
             <label class="label">별명</label>
             <div class="field is-grouped">
                 <div class="control is-expanded">
-                    <input class="input" type="text" placeholder="별명" id="edit_nickname" th:value="${user.getNickname()}">
+                    <input class="input" type="text" placeholder="별명" id="edit_nickname"
+                           th:value="${user.getNickname()}">
                 </div>
                 <div class="control">
                     <a class="button is-info" th:onclick="check_dup_nickname()">
@@ -88,7 +91,7 @@
                     <i class="fa fa-lock" aria-hidden="true"></i>
                 </span>
             </div>
-            <p class="help">비밀번호는 영문-숫자 조합 필수, 영소문자, 영대문자, 숫자, 특수문자 [!@#$%^&*], 공백제외 8~32자리</p>
+            <p class="help">비밀번호는 영문-숫자 조합 필수, 영소문자, 영대문자, 숫자, 특수문자 [!@#$%^&*], 공백제외 4~32자리</p>
             <p class="help is-danger is-hidden" id="edit_password1-error">사용할 수 없는 비밀번호 입니다.</p>
         </div>
 
@@ -123,7 +126,7 @@
 
         <div class="field is-grouped">
             <div class="control">
-                <button class="button is-link" th:onclick="edit_user()">회원가입</button>
+                <button class="button is-link" th:onclick="edit_user()">정보 수정</button>
             </div>
             <div class="control">
                 <button class="button is-link is-light" th:onclick="home()">취소</button>
@@ -134,28 +137,76 @@
 <script>
 
     $(document).ready(function () {
-        setInterval(check_edit_password_same, 1000);
+        $('#edit_password1').blur(function () {
+            check_edit_password1()
+        });
+        $('#edit_password2').blur(function () {
+            check_edit_password2()
+        });
+        $('#edit_email').blur(function () {
+            check_edit_email()
+        });
+        $('#edit_id').blur(function () {
+            reset_edit_id()
+        });
+        $('#edit_nickname').blur(function () {
+            reset_edit_nickname()
+        });
     })
-    function check_edit_password_same() {
+
+    function reset_edit_id() {
+        $('#edit_id').removeClass('is-danger');
+        $('#edit_id-error').addClass('is-hidden');
+        $('#edit_id-dup-error').addClass('is-hidden');
+        $('#edit_id-available').addClass('is-hidden');
+    }
+
+    function reset_edit_nickname() {
+        $('#edit_nickname').removeClass('is-danger');
+        $('#edit_nickname-dup-error').addClass('is-hidden');
+        $('#edit_nickname-error').addClass('is-hidden');
+        $('#edit_nickname-available').addClass('is-hidden');
+    }
+
+    function check_edit_password1() {
+        let username = $('#edit_id').val();
+        let password1 = $('#edit_password1').val();
+
+        if (password1.length > 0) {
+            if (!is_password(password1) || is_contains(password1, username)) {
+                $('#edit_password1').addClass('is-danger');
+                $('#edit_password1-error').removeClass('is-hidden');
+            } else {
+                $('#edit_password1').removeClass('is-danger');
+                $('#edit_password1-error').addClass('is-hidden');
+            }
+        }
+    }
+
+    function check_edit_password2() {
         let password1 = $('#edit_password1').val();
         let password2 = $('#edit_password2').val();
 
-        if (!is_password(password1) && password1.length > 0) {
-            $('#edit_password1').addClass('is-danger');
-            $('#edit_password1-error').removeClass('is-hidden');
+        if (password2.length > 0) {
+            if ((password2 !== password1)) {
+                $('#edit_password2').addClass('is-danger');
+                $('#edit_password2-error').removeClass('is-hidden');
+            } else {
+                $('#edit_password2').removeClass('is-danger');
+                $('#edit_password2-error').addClass('is-hidden');
+            }
         }
-        else {
-            $('#edit_password1').removeClass('is-danger');
-            $('#edit_password1-error').addClass('is-hidden');
-        }
+    }
 
-        if((password2 !== password1) && password2.length > 0){
-            $('#edit_password2').addClass('is-danger');
-            $('#edit_password2-error').removeClass('is-hidden');
-        }
-        else {
-            $('#edit_password2').removeClass('is-danger');
-            $('#edit_password2-error').addClass('is-hidden');
+    function check_edit_email() {
+        let email = $('#edit_email').val();
+
+        if (email.length > 0) {
+            if (!is_email(email)) {
+                $('#edit_email').addClass('is-danger');
+                $('#edit_email-error').removeClass('is-hidden');
+                $('#edit_email-dup-error').addClass('is-hidden');
+            }
         }
     }
 
@@ -184,7 +235,7 @@
         let email = $('#edit_email').val();
         let profile_image = $('#edit_profile_image').attr('src');
 
-        if($('#edit_id-available').hasClass('is-hidden')){
+        if ($('#edit_id-available').hasClass('is-hidden')) {
             $('#edit_id').addClass('is-danger');
             $('#edit_id-error').removeClass('is-hidden');
             $('#edit_id-dup-error').addClass('is-hidden');
@@ -192,7 +243,7 @@
             return;
         }
 
-        if($('#edit_nickname-available').hasClass('is-hidden')){
+        if ($('#edit_nickname-available').hasClass('is-hidden')) {
             $('#edit_nickname').addClass('is-danger');
             $('#edit_nickname-dup-error').addClass('is-hidden');
             $('#edit_nickname-error').removeClass('is-hidden');
@@ -216,56 +267,57 @@
             return;
         }
 
-        if (!is_password(password1)) {
-            $('#edit_password1').addClass('is-danger');
-            $('#edit_password1-error').removeClass('is-hidden');
-            return;
+        if (password1.length > 0 || password2.length > 0) {
+            if (!is_password(password1) || is_contains(password1, username)) {
+                $('#edit_password1').addClass('is-danger');
+                $('#edit_password1-error').removeClass('is-hidden');
+                return;
+            }
+
+            if (password1 !== password2) {
+                $('#edit_password2').addClass('is-danger');
+                $('#edit_password2-error').removeClass('is-hidden');
+                return;
+            }
         }
 
-        if (password1 !== password2) {
-            $('#edit_password2').addClass('is-danger');
-            $('#edit_password2-error').removeClass('is-hidden');
-            return;
+        if (email.length > 0) {
+            if (!is_email(email)) {
+                $('#edit_email').addClass('is-danger');
+                $('#edit_email-error').removeClass('is-hidden');
+                $('#edit_email-dup-error').addClass('is-hidden');
+                return;
+            }
         }
-
-        if (!is_email(email)) {
-            $('#edit_email').addClass('is-danger');
-            $('#edit_email-error').removeClass('is-hidden');
-            $('#edit_email-dup-error').addClass('is-hidden');
-            return;
-        }
-        let formData = new FormData();
-        formData.append('username', username);
-        formData.append('nickname', nickname);
-        formData.append('password', password1);
-        formData.append('email', email);
-        formData.append('profileImage', profile_image);
 
         $.ajax({
             type: 'POST',
             url: '/user/edit',
-            data: formData,
-            contentType: false,
-            processData: false,
+            data: JSON.stringify({
+                'username': username,
+                'nickname': nickname,
+                'password': password1,
+                'email': email,
+                'profileImage': profile_image
+            }),
+            contentType: 'application/json',
             success: function (request) {
                 alert("회원 수정이 완료되었습니다.")
                 window.location.replace("/")
             },
-            error: function (response,status,error) {
+            error: function (response, status, error) {
                 let errorMsg = response['responseJSON']['errorMessage'];
-                if(errorMsg === '중복된 아이디를 사용하는 사용자가 존재합니다.') {
+                if (errorMsg === '중복된 아이디를 사용하는 사용자가 존재합니다.') {
                     $('#edit_id').addClass('is-danger');
                     $('#edit_id-dup-error').removeClass('is-hidden');
                     $('#edit_id-error').removeClass('is-hidden');
                     $('#edit_id-available').addClass('is-hidden');
-                }
-                else if(errorMsg === '중복된 별명를 사용하는 사용자가 존재합니다.') {
+                } else if (errorMsg === '중복된 별명를 사용하는 사용자가 존재합니다.') {
                     $('#edit_nickname').addClass('is-danger');
                     $('#edit_nickname-dup-error').removeClass('is-hidden');
                     $('#edit_nickname-error').removeClass('is-hidden');
                     $('#edit_nickname-available').addClass('is-hidden');
-                }
-                else if(errorMsg === '중복된 이메일를 사용하는 사용자가 존재합니다.') {
+                } else if (errorMsg === '중복된 이메일를 사용하는 사용자가 존재합니다.') {
                     $('#edit_email').addClass('is-danger');
                     $('#edit_email-error').addClass('is-hidden');
                     $('#edit_email-dup-error').removeClass('is-hidden');
@@ -273,6 +325,7 @@
             }
         })
     }
+
     function check_dup_id() {
         let username = $('#edit_id').val();
 
