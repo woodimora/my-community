@@ -3,7 +3,6 @@ package com.sparta.community.dto;
 import com.sparta.community.model.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class PostDetailDto {
         this.title = post.getTitle();
         this.contents = post.getContents();
         if (post.getCommentList().size() > 0) {
-            for(int i = 0 ;i < post.getCommentList().size() ; i++){
+            for (int i = 0; i < post.getCommentList().size(); i++) {
                 this.commentList.add(new CommentDto(post.getCommentList().get(i)));
             }
         }

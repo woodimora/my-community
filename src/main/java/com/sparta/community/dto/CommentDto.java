@@ -31,7 +31,7 @@ public class CommentDto {
         this.modifiedAt = comment.getModifiedAt();
         this.parentId = comment.getParent() == null ? null : comment.getParent().getId();
         if (comment.getChild().size() > 0) {
-            for(int i = 0 ;i < comment.getChild().size() ; i++){
+            for (int i = 0; i < comment.getChild().size(); i++) {
                 this.child.add(new CommentDto(comment.getChild().get(i)));
             }
         }

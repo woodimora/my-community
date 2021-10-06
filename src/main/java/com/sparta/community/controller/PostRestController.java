@@ -5,7 +5,6 @@ import com.sparta.community.dto.PostRequestDto;
 import com.sparta.community.dto.PostResponseDto;
 import com.sparta.community.model.Post;
 import com.sparta.community.model.UserRoleEnum;
-import com.sparta.community.repository.PostRepository;
 import com.sparta.community.security.UserDetailsImpl;
 import com.sparta.community.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;

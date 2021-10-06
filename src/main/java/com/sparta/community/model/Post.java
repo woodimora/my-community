@@ -1,6 +1,5 @@
 package com.sparta.community.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.community.dto.PostRequestDto;
 import com.sparta.community.security.UserDetailsImpl;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Post extends Timestamped{
+public class Post extends Timestamped {
     @Id
     @GeneratedValue
     @Column(name = "post_id")

@@ -58,18 +58,16 @@ public class KakaoUserService {
         KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accsee_token);
 
         User findByKakaoId = userRepository.findByKakaoId(kakaoUserInfo.getId()).orElse(null);
-        if(findByKakaoId == null){
+        if (findByKakaoId == null) {
             String email = kakaoUserInfo.getEmail();
             User findByEmail = userRepository.findByEmail(email).orElse(null);
             if (findByEmail != null) {
                 findByEmail.updateKakaoId(kakaoUserInfo.getId());
                 forceLogin(findByEmail);
-            }
-            else {
+            } else {
                 return new KakaoUserInfoDto(kakaoUserInfo.getId(), null, kakaoUserInfo.getEmail(), kakaoUserInfo.getProfileImage());
             }
-        }
-        else {
+        } else {
             forceLogin(findByKakaoId);
         }
 

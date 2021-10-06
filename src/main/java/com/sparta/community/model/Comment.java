@@ -1,6 +1,5 @@
 package com.sparta.community.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.community.dto.CommentRequestDto;
 import com.sparta.community.security.UserDetailsImpl;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Comment extends Timestamped{
+public class Comment extends Timestamped {
     @Id
     @GeneratedValue
     @Column(name = "comment_id")
@@ -45,7 +44,7 @@ public class Comment extends Timestamped{
         this.user = userDetails.getUser();
     }
 
-    public void addComment(Comment child){
+    public void addComment(Comment child) {
         this.masterId = child.masterId;
         this.child.add(child);
         child.updateParent(this);

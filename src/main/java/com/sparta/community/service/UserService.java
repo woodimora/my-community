@@ -27,12 +27,9 @@ public class UserService {
         User found = userRepository.findByUsername(username).orElse(null);
         if (found == null) {
             return true;
-        }
-        else if(userDetails == null)
-        {
+        } else if (userDetails == null) {
             return false;
-        }
-        else if(userDetails.getUser().getId().equals(found.getId())){
+        } else if (userDetails.getUser().getId().equals(found.getId())) {
             return true;
         }
         return false;
@@ -44,12 +41,9 @@ public class UserService {
         User found = userRepository.findByNickname(nickname).orElse(null);
         if (found == null) {
             return true;
-        }
-        else if(userDetails == null)
-        {
+        } else if (userDetails == null) {
             return false;
-        }
-        else if(userDetails.getUser().getId().equals(found.getId())){
+        } else if (userDetails.getUser().getId().equals(found.getId())) {
             return true;
         }
         return false;
@@ -88,10 +82,9 @@ public class UserService {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("로그인 정보가 올바르지 않습니다.")
         );
-        if(requestDto.getPassword().equals("")){
+        if (requestDto.getPassword().equals("")) {
             user.updateUser(requestDto);
-        }
-        else {
+        } else {
             String password = passwordEncoder.encode(requestDto.getPassword());
             user.updateUserWithPassword(requestDto, password);
         }

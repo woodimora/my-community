@@ -42,8 +42,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginError(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails != null)
-        {
+        if (userDetails != null) {
             return "alreadyLogin";
         }
         return "loginNecessary";
@@ -52,7 +51,7 @@ public class UserController {
 
     @GetMapping("/user/login")
     public String loginForm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails != null)     //로그인이 되어있는 경우
+        if (userDetails != null)     //로그인이 되어있는 경우
         {
             return "alreadyLogin";
         }
@@ -61,8 +60,7 @@ public class UserController {
 
     @GetMapping("/user/register")
     public String registerForm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails != null)
-        {
+        if (userDetails != null) {
             return "alreadyLogin";
         }
         return "userRegisterForm";
@@ -70,7 +68,7 @@ public class UserController {
 
     @Secured(value = UserRoleEnum.Authority.USER)
     @GetMapping("/user/edit")
-    public String editForm(@AuthenticationPrincipal UserDetailsImpl userDetails,Model model) {
+    public String editForm(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
         UserResponseDto responseDto = userService.getUser(userDetails);
         model.addAttribute("user", responseDto);
         return "userEditForm";
@@ -120,8 +118,7 @@ public class UserController {
         if (kakaoUserInfoDto.getNickname() == null) {
             model.addAttribute("user", kakaoUserInfoDto);
             return "nicknameCheck";
-        }
-        else{
+        } else {
             return "redirect:/";
         }
     }
@@ -136,7 +133,7 @@ public class UserController {
 
     private String saveProfileImage(String profileImage) {
         String fileName;
-        try{
+        try {
             String data = profileImage.split(",")[1];
             byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
             fileName = "/profile/" + UUID.randomUUID() + ".png";

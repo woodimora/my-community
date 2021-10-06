@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class User extends Timestamped{
+public class User extends Timestamped {
     @Id
     @GeneratedValue
     private Long id;
