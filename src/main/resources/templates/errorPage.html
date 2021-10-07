@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OO게시판</title>
+    <script>
+        let errorMsg = `[[${ErrorMsg}]]`;
+            alert(errorMsg)
+            if(errorMsg === '로그인이 필요한 기능입니다.'){
+                window.location.href = "/user/login"
+            }else {
+                window.location.replace("/")
+            }
+    </script>
+</head>
+<body>
+</body>
+</html>

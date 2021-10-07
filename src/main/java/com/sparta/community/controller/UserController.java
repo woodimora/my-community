@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.community.dto.KakaoUserInfoDto;
 import com.sparta.community.dto.UserRequestDto;
 import com.sparta.community.dto.UserResponseDto;
+import com.sparta.community.exception.CustomErrorException;
 import com.sparta.community.model.User;
 import com.sparta.community.model.UserRoleEnum;
 import com.sparta.community.security.UserDetailsImpl;
@@ -43,9 +44,9 @@ public class UserController {
     @GetMapping("/login")
     public String loginError(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (userDetails != null) {
-            return "alreadyLogin";
+            throw new CustomErrorException("이미 로그인이 되어있습니다.");
         }
-        return "loginNecessary";
+        throw new CustomErrorException("로그인이 필요한 기능입니다.");
     }
 
 
@@ -53,7 +54,7 @@ public class UserController {
     public String loginForm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (userDetails != null)     //로그인이 되어있는 경우
         {
-            return "alreadyLogin";
+            throw new CustomErrorException("이미 로그인이 되어있습니다.");
         }
         return "loginForm";
     }
@@ -61,7 +62,7 @@ public class UserController {
     @GetMapping("/user/register")
     public String registerForm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (userDetails != null) {
-            return "alreadyLogin";
+            throw new CustomErrorException("이미 로그인이 되어있습니다.");
         }
         return "userRegisterForm";
     }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.community.dto.KakaoUserInfoDto;
+import com.sparta.community.exception.CustomErrorException;
 import com.sparta.community.model.User;
 import com.sparta.community.repository.UserRepository;
 import com.sparta.community.security.UserDetailsImpl;
@@ -41,7 +42,7 @@ public class KakaoUserService {
         String nickname = infoDto.getNickname();
         User findByNickname = userRepository.findByNickname(nickname).orElse(null);
         if (findByNickname != null) {
-            throw new IllegalArgumentException("중복된 별명를 사용하는 사용자가 존재합니다.");
+            throw new CustomErrorException("중복된 별명를 사용하는 사용자가 존재합니다.");
         }
         String password = UUID.randomUUID().toString();
 

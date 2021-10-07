@@ -69,6 +69,11 @@ public class CommentService {
                 () -> new IllegalArgumentException("댓글의 게시글을 찾을 수 없습니다.")
         );
         post.downCountCommentCount();
-        commentRepository.delete(comment);
+        if(comment.getChild().size() > 0 ){
+            comment.deleteComment();
+        }
+        else {
+            commentRepository.delete(comment);
+        }
     }
 }

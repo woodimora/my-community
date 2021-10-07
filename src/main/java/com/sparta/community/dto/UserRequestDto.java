@@ -1,5 +1,6 @@
 package com.sparta.community.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserRequestDto {
     @Size(min = 4, max = 16, message = "아이디를 2~16자 사이로 입력해주세요.")
     private String username;

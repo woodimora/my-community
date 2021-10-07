@@ -27,7 +27,9 @@
         <li class="button is-link is-light top-button-login" th:unless="${#authorization.expr('isAuthenticated()')}"
             th:onclick="registerForm()">회원가입
         </li>
-        <li class="button is-info is-light top-button-profile-edit" th:if="${#authorization.expr('isAuthenticated()')}" onclick="edit_user()">프로필 수정</li>
+        <li class="button is-info is-light top-button-profile-edit" th:if="${#authorization.expr('isAuthenticated()')}"
+            onclick="edit_user()">프로필 수정
+        </li>
         <li class="button is-error is-danger top-button-logout" th:if="${#authorization.expr('isAuthenticated()')}"
             onclick="logout()">로그아웃
         </li>
@@ -42,7 +44,8 @@
         <article class="media">
             <figure class="media-left">
                 <figure class="image is-64x64" style="margin: auto;">
-                    <img class="is-rounded" style="width: 64px;height: 64px; object-fit: cover" src="images/rtan_heart.png" th:src="${post.getProfileImage()}">
+                    <img class="is-rounded" style="width: 64px;height: 64px; object-fit: cover"
+                         src="images/rtan_heart.png" th:src="${post.getProfileImage()}">
                 </figure>
             </figure>
             <div class="content" style="margin-top: auto; margin-bottom: auto">
@@ -80,7 +83,8 @@
         <article class="media" th:if="${#authorization.expr('isAuthenticated()')}">
             <figure class="media-left">
                 <figure class="image is-64x64" style="margin: auto;">
-                    <img class="is-rounded" style="width: 64px;height: 64px; object-fit: cover" th:src="${user.getProfileImage()}">
+                    <img class="is-rounded" style="width: 64px;height: 64px; object-fit: cover"
+                         th:src="${user.getProfileImage()}">
                 </figure>
                 <p th:text="${user.getNickname()}" style="text-align:center;"></p>
             </figure>
@@ -119,7 +123,7 @@
         let post = [[${post}]];
         $('#detail_date').text(date2str(post['createdAt']))
         $('#comment-container').empty()
-        console.log(post)
+        // console.log(post)
         let comments = post['commentList']
         let temp_html = '';
         for (let i = 0; i < comments.length; i++) {
@@ -149,12 +153,16 @@
                                 <div class="content">
                                     <p>
                                         <strong >${comment.nickname} </strong> <small>${date2str(comment.createdAt)}</small>
-                                        <br>
-                                            ${comment.contents}
-                                        <br>
-                                        <small><a onclick="pop_reply(${comment.id})">답글달기</a></small>
-                                    </p>
-                                </div>`
+                                        <br>`
+            if (`${comment.deleted}` === "true") {
+                temp_html += `<small style="color: darkgray">${comment.contents}</small>`
+            } else {
+                temp_html += `${comment.contents}`
+            }
+            temp_html += `<br>
+                            <small><a onclick="pop_reply(${comment.id})">답글달기</a></small>
+                        </p>
+                    </div>`
         } else {
             let nickname = user['nickname']
             let image = user['profileImage']
@@ -168,11 +176,15 @@
                                 <div class="content">
                                     <p>
                                         <strong >${comment.nickname} </strong> <small style="margin-left:20px;">${date2str(comment.createdAt)}</small>
-                                        <br>
-                                            ${comment.contents}
-                                        <br>
-                                        <small><a onclick="pop_reply(${comment.id})">답글달기</a></small>`
-            if (nickname === `${comment.nickname}`) {
+                                        <br>`
+            if (`${comment.deleted}` === "true") {
+                temp_html += `<small style="color: darkgray">${comment.contents}</small>`
+            } else {
+                temp_html += `${comment.contents}`
+            }
+            temp_html += `<br>
+                            <small><a onclick="pop_reply(${comment.id})">답글달기</a></small>`
+            if ((nickname === `${comment.nickname}`) && (`${comment.deleted}` === "false")) {
                 temp_html += `<small style="float: right; margin-right:10px;"><a onclick="pop_edit_reply(${comment.id}, '${comment.contents}')">수정</a></small>
                             <small style="float: right; margin-right:10px;"><a onclick="delete_reply(${comment.id})">삭제</a></small>`
             }
@@ -202,7 +214,7 @@
         }
 
         let child = comment['child']
-        console.log(child)
+        // console.log(child)
         for (let i = 0; i < child.length; i++) {
             temp_html += add_comment(child[i])
             temp_html += `</div>

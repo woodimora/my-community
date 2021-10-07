@@ -38,6 +38,9 @@ public class Comment extends Timestamped {
     @OneToMany(mappedBy = "parent")
     private final List<Comment> child = new ArrayList<>();
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean deleted;
+
     public Comment(CommentRequestDto requestDto, UserDetailsImpl userDetails, Long postId) {
         this.masterId = postId;
         this.contents = requestDto.getContents();
@@ -60,5 +63,21 @@ public class Comment extends Timestamped {
 
     public void updateComment(String contents) {
         this.contents = contents;
+    }
+
+    public void deleteComment() {
+        this.contents = "사용자에 의해 삭제된 댓글입니다.";
+        this.deleted = true;
+    }
+
+    public void deleteAll() {
+        this.parent = null;
+        this.post = null;
+        if(this.child.size() > 0){
+            for(Comment comment : this.child){
+                comment.deleteAll();
+            }
+            this.child.clear();
+        }
     }
 }

@@ -3,6 +3,8 @@ package com.sparta.community.service;
 import com.sparta.community.dto.PostDetailDto;
 import com.sparta.community.dto.PostRequestDto;
 import com.sparta.community.dto.PostResponseDto;
+import com.sparta.community.exception.CustomErrorException;
+import com.sparta.community.model.Comment;
 import com.sparta.community.model.Post;
 import com.sparta.community.repository.PostRepository;
 import com.sparta.community.security.UserDetailsImpl;
@@ -32,7 +34,7 @@ public class PostService {
 
     public PostDetailDto getPostDetails(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다.")
+                () -> new CustomErrorException("해당 게시물을 찾을 수 없습니다.")
         );
         return new PostDetailDto(post);
     }
@@ -40,7 +42,7 @@ public class PostService {
     @Transactional
     public PostDetailDto updateViewCount(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다.")
+                () -> new CustomErrorException("해당 게시물을 찾을 수 없습니다.")
         );
         post.updateViewCount();
         return new PostDetailDto(post);
@@ -48,13 +50,18 @@ public class PostService {
 
     public void deletePost(Long id, UserDetailsImpl userDetails) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 게시글입니다.")
+                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다.")
         );
 
         if (!post.getUser().getId().equals(userDetails.getUser().getId())) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
 
+        if (post.getCommentList().size() > 0) {
+            for( Comment comment : post.getCommentList()) {
+                comment.deleteAll();
+            }
+        }
         postRepository.delete(post);
     }
 

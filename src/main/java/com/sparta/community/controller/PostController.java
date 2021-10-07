@@ -44,11 +44,12 @@ public class PostController {
 
     @GetMapping("/posts/{id}")
     public String getPostDetail(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletRequest request, HttpServletResponse response, Model model) {
-        //게시글 조회수를 위해 현재 쿠키에 담겨져 있는 게시글 id를 확인.
+
         if (userDetails != null) {
             model.addAttribute("user", new UserResponseDto(userDetails.getUser()));
         }
 
+        //게시글 조회수를 위해 현재 쿠키에 담겨져 있는 게시글 id를 확인.
         String cookieName = "postId" + id;
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
