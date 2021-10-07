@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
+    @NotNull
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,10 +42,9 @@ public class Comment extends Timestamped {
     @Column(columnDefinition = "boolean default false")
     private boolean deleted;
 
-    public Comment(CommentRequestDto requestDto, UserDetailsImpl userDetails, Long postId) {
+    public Comment(CommentRequestDto requestDto, Long postId) {
         this.masterId = postId;
         this.contents = requestDto.getContents();
-        this.user = userDetails.getUser();
     }
 
     public void addComment(Comment child) {
@@ -79,5 +79,9 @@ public class Comment extends Timestamped {
             }
             this.child.clear();
         }
+    }
+
+    public void updateUser(User user) {
+        this.user = user;
     }
 }

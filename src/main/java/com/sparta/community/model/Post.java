@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,22 +23,29 @@ public class Post extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
+    @NotNull
     private String title;
 
-    @Column(nullable = false)
+    @NotNull
     private String contents;
 
     @OneToMany(mappedBy = "post")
     private final List<Comment> commentList = new ArrayList<>();
 
-    @Column(nullable = false, columnDefinition = "integer default 0")
-    private int viewCount;
-    @Column(nullable = false, columnDefinition = "integer default 0")
-    private int commentCount;
+    @OneToMany(mappedBy = "post")
+    private final List<Heart> hearts = new ArrayList<>();
 
-    public Post(PostRequestDto requestDto, UserDetailsImpl userDetails) {
-        this.user = userDetails.getUser();
+    @Column(columnDefinition = "integer default 0")
+    @NotNull
+    private int viewCount;
+    @Column(columnDefinition = "integer default 0")
+    @NotNull
+    private int commentCount;
+    @Column(columnDefinition = "integer default 0")
+    @NotNull
+    private int heartCount;
+
+    public Post(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
     }
@@ -63,5 +71,19 @@ public class Post extends Timestamped {
 
     public void downCountCommentCount() {
         this.commentCount -= 1;
+    }
+
+    public void updateUser(User user){
+        this.user = user;
+    }
+
+    public void addHeart(Heart heart) {
+        this.hearts.add(heart);
+        this.heartCount += 1;
+    }
+
+    public void deleteHeart(Heart heart) {
+        this.hearts.remove(heart);
+        this.heartCount -= 1;
     }
 }

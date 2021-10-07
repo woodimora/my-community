@@ -82,8 +82,8 @@ public class KakaoUserService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", "34859b74f2e726356d9d9c561f7a8932");
-//        body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
-        body.add("redirect_uri", "http://rlobean.shop/user/kakao/callback");
+        body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
+//        body.add("redirect_uri", "http://rlobean.shop/user/kakao/callback");
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);

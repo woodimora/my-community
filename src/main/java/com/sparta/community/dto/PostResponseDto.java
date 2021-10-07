@@ -18,6 +18,7 @@ public class PostResponseDto {
     private LocalDateTime modifiedAt;
     private int viewCount;
     private int commentsCount;
+    private int heartCount;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -29,5 +30,6 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.viewCount = post.getViewCount();
         this.commentsCount = post.getCommentCount();
+        this.heartCount = post.getHeartCount();
     }
 }
