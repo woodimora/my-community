@@ -2,15 +2,17 @@
 주특기 Spring 심화 과정 과제
 
 ## 🗓게시판 만들기
+링크 : http://rlobean.shop/
+## 1. 기술스택
 ### 프론트
 html, css, javascript, ajax, jquery
 ### 백엔드
 java, spring
-## 1. 요구사항
+## 2. 요구사항
 [요구사항](Requirements.md)
-## 2. 와이어프레임
+## 3. 와이어프레임
 
-## 3. 화면 구성
+## 4. 화면 구성
 1. 메인화면
 <img width="800" alt="Screen Shot 2021-10-07 at 3 10 40 PM" src="https://user-images.githubusercontent.com/70922665/136329205-b82bd98d-6c81-4e66-8e47-00919f72f849.png">
 2. 로그인화면
