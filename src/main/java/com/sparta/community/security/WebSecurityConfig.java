@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 // [로그인 기능]
                 .formLogin()
 // 로그인 View 제공 (GET /user/login)
-                .loginPage("/user/login")
+                .loginPage("/login")
 // 로그인 처리 (POST /user/login)
                 .loginProcessingUrl("/user/login")
                 .usernameParameter("username")
@@ -69,6 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 // 로그아웃 요청 처리 URL
                 .logoutUrl("/user/logout")
                 .permitAll()
+                .logoutSuccessUrl("/")
                 .and()
                 .exceptionHandling()
 // "접근 불가" 페이지 URL 설정

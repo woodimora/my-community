@@ -57,7 +57,7 @@
                     </a>
                 </div>
             </div>
-            <p class="help is-danger is-hidden" id="id-error">올바른 아이디를 입력하세요. 영소문자, 영대문자, 숫자, 2~16자리</p>
+            <p class="help is-danger is-hidden" id="id-error">올바른 아이디를 입력하세요. 영소문자, 영대문자, 숫자, 4~16자리</p>
             <p class="help is-danger is-hidden" id="id-dup-error">동일한 아이디가 존재합니다.</p>
             <p class="help is-success is-hidden" id="id-available">사용가능한 아이디 입니다.</p>
         </div>
@@ -90,7 +90,7 @@
                     <i class="fa fa-lock" aria-hidden="true"></i>
                 </span>
             </div>
-            <p class="help">비밀번호는 영문-숫자 조합 필수, 영소문자, 영대문자, 숫자, 특수문자 [!@#$%^&*], 공백제외 12~32자리</p>
+            <p class="help">비밀번호는 영문-숫자 조합 필수, 영소문자, 영대문자, 숫자, 특수문자 [!@#$%^&*], 공백제외 4~32자리</p>
             <p class="help is-danger is-hidden" id="password1-error">사용할 수 없는 비밀번호 입니다.</p>
         </div>
 
@@ -135,6 +135,20 @@
     </div>
 </section>
 <script>
+
+    $(document).ready(function () {
+        $('#kakao_register_nickname').blur(function () {
+            reset_kakao_register_nickname()
+        });
+    })
+
+    function reset_kakao_register_nickname() {
+        $('#kakao_register_nickname').removeClass('is-danger');
+        $('#kakao_nickname-error').addClass('is-hidden');
+        $('#kakao_nickname-dup-error').addClass('is-hidden');
+        $('#kakao_nickname-available').addClass('is-hidden');
+    }
+
     function readURL(input) {
         // console.log(input.files)
         if (input.files && input.files[0]) {
@@ -177,17 +191,16 @@
 
         // console.log(nickname, email, username, profile_image)
 
-        let formData = new FormData();
-        formData.append('nickname', nickname)
-        formData.append('email', email)
-        formData.append('id', username)
-        formData.append('profileImage', profile_image)
         $.ajax({
             type: 'POST',
             url: '/user/register/kakao',
-            data: formData,
-            contentType: false,
-            processData: false,
+            data: JSON.stringify({
+                'username':username,
+                'nickname':nickname,
+                'email':email,
+                'profileImage':profile_image
+            }),
+            contentType: 'application/json',
             success: function (request) {
                 alert("회원가입이 되었습니다.")
                 window.location.replace("/")

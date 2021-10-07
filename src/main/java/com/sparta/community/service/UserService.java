@@ -2,6 +2,7 @@ package com.sparta.community.service;
 
 import com.sparta.community.dto.UserRequestDto;
 import com.sparta.community.dto.UserResponseDto;
+import com.sparta.community.exception.CustomErrorException;
 import com.sparta.community.model.User;
 import com.sparta.community.repository.UserRepository;
 import com.sparta.community.security.UserDetailsImpl;
@@ -27,8 +28,9 @@ public class UserService {
         User found = userRepository.findByUsername(username).orElse(null);
         if (found == null) {
             return true;
-        }
-        else if(userDetails.getUser().getId().equals(found.getId())) {
+        } else if (userDetails == null) {
+            return false;
+        } else if (userDetails.getUser().getId().equals(found.getId())) {
             return true;
         }
         return false;
@@ -40,8 +42,9 @@ public class UserService {
         User found = userRepository.findByNickname(nickname).orElse(null);
         if (found == null) {
             return true;
-        }
-        else if(userDetails.getUser().getId().equals(found.getId())) {
+        } else if (userDetails == null) {
+            return false;
+        } else if (userDetails.getUser().getId().equals(found.getId())) {
             return true;
         }
         return false;
@@ -51,17 +54,17 @@ public class UserService {
         String username = requestDto.getUsername();
         User findByUsername = userRepository.findByUsername(username).orElse(null);
         if (findByUsername != null) {
-            throw new IllegalArgumentException("중복된 아이디를 사용하는 사용자가 존재합니다.");
+            throw new CustomErrorException("중복된 아이디를 사용하는 사용자가 존재합니다.");
         }
         String nickname = requestDto.getNickname();
         User findByNickname = userRepository.findByNickname(nickname).orElse(null);
         if (findByNickname != null) {
-            throw new IllegalArgumentException("중복된 별명를 사용하는 사용자가 존재합니다.");
+            throw new CustomErrorException("중복된 별명를 사용하는 사용자가 존재합니다.");
         }
         String email = requestDto.getEmail();
         User findByEmail = userRepository.findByEmail(email).orElse(null);
         if (findByEmail != null) {
-            throw new IllegalArgumentException("중복된 이메일를 사용하는 사용자가 존재합니다.");
+            throw new CustomErrorException("중복된 이메일를 사용하는 사용자가 존재합니다.");
         }
 
         User user = new User(username, nickname, passwordEncoder.encode(requestDto.getPassword()), requestDto.getEmail(), requestDto.getProfileImage());
@@ -70,17 +73,22 @@ public class UserService {
 
     public UserResponseDto getUser(UserDetailsImpl userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("로그인 정보가 올바르지 않습니다.")
+                () -> new CustomErrorException("로그인 정보가 올바르지 않습니다.")
         );
         return new UserResponseDto(user);
     }
 
     @Transactional
-    public void updateUser(UserRequestDto requestDto, UserDetailsImpl userDetails) {
+    public User updateUser(UserRequestDto requestDto, UserDetailsImpl userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("로그인 정보가 올바르지 않습니다.")
+                () -> new CustomErrorException("로그인 정보가 올바르지 않습니다.")
         );
-        String password = passwordEncoder.encode(requestDto.getPassword());
-        user.updateUser(requestDto, password);
+        if (requestDto.getPassword().equals("")) {
+            user.updateUser(requestDto);
+        } else {
+            String password = passwordEncoder.encode(requestDto.getPassword());
+            user.updateUserWithPassword(requestDto, password);
+        }
+        return user;
     }
 }

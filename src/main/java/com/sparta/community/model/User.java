@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class User extends Timestamped{
+public class User extends Timestamped {
     @Id
     @GeneratedValue
     private Long id;
@@ -67,9 +67,16 @@ public class User extends Timestamped{
         this.kakaoId = id;
     }
 
-    public void updateUser(UserRequestDto requestDto, String password) {
-        this.nickname = requestDto.getNickname();
+    public void updateUserWithPassword(UserRequestDto requestDto, String password) {
+        this.username = requestDto.getUsername();
         this.password = password;
+        this.nickname = requestDto.getNickname();
+        this.email = requestDto.getEmail();
+        this.profileImage = requestDto.getProfileImage();
+    }
+
+    public void updateUser(UserRequestDto requestDto) {
+        this.username = requestDto.getUsername();
         this.nickname = requestDto.getNickname();
         this.email = requestDto.getEmail();
         this.profileImage = requestDto.getProfileImage();

@@ -1,6 +1,5 @@
 package com.sparta.community.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.community.dto.CommentRequestDto;
 import com.sparta.community.security.UserDetailsImpl;
 import lombok.Getter;
@@ -13,11 +12,13 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Comment extends Timestamped{
+public class Comment extends Timestamped {
     @Id
     @GeneratedValue
     @Column(name = "comment_id")
     private Long id;
+
+    private Long masterId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
@@ -37,12 +38,17 @@ public class Comment extends Timestamped{
     @OneToMany(mappedBy = "parent")
     private final List<Comment> child = new ArrayList<>();
 
-    public Comment(CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+    @Column(columnDefinition = "boolean default false")
+    private boolean deleted;
+
+    public Comment(CommentRequestDto requestDto, UserDetailsImpl userDetails, Long postId) {
+        this.masterId = postId;
         this.contents = requestDto.getContents();
         this.user = userDetails.getUser();
     }
 
-    public void addComment(Comment child){
+    public void addComment(Comment child) {
+        this.masterId = child.masterId;
         this.child.add(child);
         child.updateParent(this);
     }
@@ -57,5 +63,21 @@ public class Comment extends Timestamped{
 
     public void updateComment(String contents) {
         this.contents = contents;
+    }
+
+    public void deleteComment() {
+        this.contents = "사용자에 의해 삭제된 댓글입니다.";
+        this.deleted = true;
+    }
+
+    public void deleteAll() {
+        this.parent = null;
+        this.post = null;
+        if(this.child.size() > 0){
+            for(Comment comment : this.child){
+                comment.deleteAll();
+            }
+            this.child.clear();
+        }
     }
 }

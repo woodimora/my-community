@@ -1,6 +1,5 @@
 package com.sparta.community.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.community.dto.PostRequestDto;
 import com.sparta.community.security.UserDetailsImpl;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Post extends Timestamped{
+public class Post extends Timestamped {
     @Id
     @GeneratedValue
     @Column(name = "post_id")
@@ -47,10 +46,6 @@ public class Post extends Timestamped{
         this.viewCount += 1;
     }
 
-    public void updateCommentCount() {
-        this.commentCount += 1;
-    }
-
     public void addComment(Comment comment) {
         this.commentList.add(comment);
         comment.updatePost(this);
@@ -60,5 +55,13 @@ public class Post extends Timestamped{
     public void updatePost(String title, String contents) {
         this.title = title;
         this.contents = contents;
+    }
+
+    public void upCountCommentCount() {
+        this.commentCount += 1;
+    }
+
+    public void downCountCommentCount() {
+        this.commentCount -= 1;
     }
 }

@@ -29,14 +29,17 @@ function edit_user() {
     window.location.href = "/user/edit"
 }
 
+function is_contains(value1, value2){
+    return value1.indexOf(value2) >= 0;
+}
 
 function is_username(asValue) {
-    var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,16}$/;
+    var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{4,16}$/;
     return regExp.test(asValue);
 }
 
 function is_password(asValue) {
-    var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,32}$/;
+    var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{4,32}$/;
     return regExp.test(asValue);
 }
 
@@ -104,7 +107,7 @@ function get_posts() {
             if (response['empty'] === true)
                 return;
             let posts = response['content']
-            console.log(posts)
+            // console.log(posts)
 
             for (let i = 0; i < response['numberOfElements']; i++) {
                 let post = posts[i];
