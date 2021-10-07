@@ -1,9 +1,7 @@
 package com.sparta.community.controller;
 
-import com.sparta.community.dto.PostDetailDto;
 import com.sparta.community.dto.PostRequestDto;
 import com.sparta.community.dto.PostResponseDto;
-import com.sparta.community.model.Post;
 import com.sparta.community.model.UserRoleEnum;
 import com.sparta.community.security.UserDetailsImpl;
 import com.sparta.community.service.PostService;
@@ -14,10 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class PostRestController {
@@ -39,7 +33,7 @@ public class PostRestController {
     @Secured(value = UserRoleEnum.Authority.USER)
     @PostMapping("/api/posts")
     public PostResponseDto createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.save(new Post(requestDto, userDetails));
+        return postService.save(requestDto, userDetails);
     }
 
     @Secured(value = UserRoleEnum.Authority.USER)

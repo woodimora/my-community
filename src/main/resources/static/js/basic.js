@@ -21,8 +21,8 @@ function postForm() {
 }
 
 function login_kakao() {
-    // window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://localhost:8080/user/kakao/callback&response_type=code";
-    window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://rlobean.shop/user/kakao/callback&response_type=code";
+    window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://localhost:8080/user/kakao/callback&response_type=code";
+    // window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://rlobean.shop/user/kakao/callback&response_type=code";
 }
 
 function edit_user() {
@@ -134,6 +134,7 @@ function get_posts() {
                                             <small>댓글 : ${post['commentsCount']}</small>
                                     </div>
                                     <div class="level-right">
+                                        <small style="margin-right:15px"><i style="color: red;" class="fa fa-heart" aria-hidden="true"></i> ${post['heartCount']}</small>
                                         <small>조회수 : ${post['viewCount']}</small>
                                     </div>
                                 </nav>

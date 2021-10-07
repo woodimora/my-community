@@ -7,7 +7,7 @@
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <!-- Font Awesome CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="/js/basic.js"></script>
@@ -69,10 +69,12 @@
                     본문
                 </p>
 
-                <p th:text="|댓글 : ${post.getCommentCount()}|">
-                    <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                <span th:text="|댓글 : ${post.getCommentCount()}|">
                     댓글 : 3
-                </p>
+                </span>
+                <span style="margin-left: 15px;" id="like_heart">
+                    </span>
             </div>
         </article>
         <!--본문 끝-->
@@ -135,9 +137,56 @@
         temp_html += `</div>
                 </article>`
         $('#comment-container').append(temp_html)
+
+        heart_display()
     })
 
     let containerId = '';
+
+    function heart_display() {
+        let post = [[${post}]];
+        let user = [[${user}]];
+
+        let temp_html = ''
+        if (!user) {
+            temp_html = `<i style="color: red;cursor:pointer;" class="fa fa-heart-o" aria-hidden="true" onClick="like_post()"></i><span style="margin-left: 5px">${post['heartCount']}</span>`
+            $('#like_heart').append(temp_html)
+        } else {
+            let userId = user['userId']
+            let likeIdList = post['likedUserIdList']
+            let isLiked = likeIdList.indexOf(userId) >= 0;
+            if (isLiked) {
+                temp_html = `<i style="color: red;cursor:pointer;" class="fa fa-heart" aria-hidden="true" onClick="like_post()"></i><span style="margin-left: 5px">${post['heartCount']}</span>`
+            } else {
+                temp_html = `<i style="color: red;cursor:pointer;" class="fa fa-heart-o" aria-hidden="true" onClick="like_post()"></i><span style="margin-left: 5px">${post['heartCount']}</span>`
+            }
+            $('#like_heart').append(temp_html)
+        }
+    }
+
+    function like_post() {
+        let post = [[${post}]];
+        let user = [[${user}]];
+        if (!user) {
+            alert("로그인이 필요한 기능입니다.")
+            return;
+        }
+        let userId = user['userId']
+        let likeIdList = post['likedUserIdList']
+        let isLiked = likeIdList.indexOf(userId) >= 0;
+        console.log(isLiked)
+        $.ajax({
+            type: 'POST',
+            url: `/api/posts/${post['id']}/like`,
+            data: JSON.stringify({
+                'isLiked': isLiked
+            }),
+            contentType: 'application/json',
+            success: function (response) {
+                window.location.reload();
+            }
+        })
+    }
 
     function add_comment(comment) {
         let user = [[${user}]]

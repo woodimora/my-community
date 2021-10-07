@@ -67,7 +67,7 @@ public class UserService {
             throw new CustomErrorException("중복된 이메일를 사용하는 사용자가 존재합니다.");
         }
 
-        User user = new User(username, nickname, passwordEncoder.encode(requestDto.getPassword()), requestDto.getEmail(), requestDto.getProfileImage());
+        User user = new User(requestDto, passwordEncoder.encode(requestDto.getPassword()));
         userRepository.save(user);
     }
 

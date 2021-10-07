@@ -1,5 +1,6 @@
 package com.sparta.community.dto;
 
+import com.sparta.community.model.Heart;
 import com.sparta.community.model.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,8 @@ public class PostDetailDto {
     private final List<CommentDto> commentList = new ArrayList<>();
     private int commentCount;
     private int viewCount;
+    private int heartCount;
+    private final List<Long> likedUserIdList = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -43,5 +46,11 @@ public class PostDetailDto {
         this.viewCount = post.getViewCount();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
+        this.heartCount = post.getHeartCount();
+        if (post.getHearts().size() > 0) {
+            for(int i = 0 ;i < post.getHearts().size(); i++){
+                this.likedUserIdList.add(post.getHearts().get(i).getUser().getId());
+            }
+        }
     }
 }

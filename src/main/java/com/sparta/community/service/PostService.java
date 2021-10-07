@@ -5,8 +5,12 @@ import com.sparta.community.dto.PostRequestDto;
 import com.sparta.community.dto.PostResponseDto;
 import com.sparta.community.exception.CustomErrorException;
 import com.sparta.community.model.Comment;
+import com.sparta.community.model.Heart;
 import com.sparta.community.model.Post;
+import com.sparta.community.model.User;
+import com.sparta.community.repository.HeartRepository;
 import com.sparta.community.repository.PostRepository;
+import com.sparta.community.repository.UserRepository;
 import com.sparta.community.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,15 +21,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PostService {
 
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final HeartRepository heartRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository) {
+    public PostService(UserRepository userRepository, PostRepository postRepository, HeartRepository heartRepository) {
+        this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.heartRepository = heartRepository;
     }
 
-    public PostResponseDto save(Post post) {
-        return new PostResponseDto(postRepository.save(post));
+    @Transactional
+    public PostResponseDto save(PostRequestDto requestDto, UserDetailsImpl userDetails) {
+        Post post = postRepository.save(new Post(requestDto));
+        User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 정보를 찾을 수 없습니다.")
+        );
+        user.addPost(post);
+        return new PostResponseDto(post);
     }
 
     public Page<PostResponseDto> getAllPosts(PageRequest pageRequest) {
@@ -48,6 +62,7 @@ public class PostService {
         return new PostDetailDto(post);
     }
 
+    @Transactional
     public void deletePost(Long id, UserDetailsImpl userDetails) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다.")
@@ -55,6 +70,9 @@ public class PostService {
 
         if (!post.getUser().getId().equals(userDetails.getUser().getId())) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
+        }
+        if (post.getHearts().size() > 0) {
+            heartRepository.deleteAll(post.getHearts());
         }
 
         if (post.getCommentList().size() > 0) {
@@ -85,4 +103,5 @@ public class PostService {
         }
         return new PostResponseDto(post);
     }
+
 }
