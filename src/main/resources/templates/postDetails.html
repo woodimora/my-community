@@ -125,18 +125,18 @@
         let post = [[${post}]];
         $('#detail_date').text(date2str(post['createdAt']))
         $('#comment-container').empty()
-        // console.log(post)
         let comments = post['commentList']
+        console.log(comments)
         let temp_html = '';
         for (let i = 0; i < comments.length; i++) {
             let comment = comments[i];
-            temp_html += add_comment(comment)
+            temp_html += add_comment(comment);
             temp_html += `</div>
-                </article>`
+                </article>`;
         }
         temp_html += `</div>
-                </article>`
-        $('#comment-container').append(temp_html)
+                </article>`;
+        $('#comment-container').append(temp_html);
 
         heart_display()
     })

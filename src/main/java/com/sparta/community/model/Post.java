@@ -1,7 +1,6 @@
 package com.sparta.community.model;
 
 import com.sparta.community.dto.PostRequestDto;
-import com.sparta.community.security.UserDetailsImpl;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +29,7 @@ public class Post extends Timestamped {
     private String contents;
 
     @OneToMany(mappedBy = "post")
+    @OrderBy("createdAt desc")
     private final List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
