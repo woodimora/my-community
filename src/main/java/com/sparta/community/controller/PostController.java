@@ -44,7 +44,6 @@ public class PostController {
 
     @GetMapping("/posts/{id}")
     public String getPostDetail(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletRequest request, HttpServletResponse response, Model model) {
-
         if (userDetails != null) {
             model.addAttribute("user", new UserResponseDto(userDetails.getUser()));
         }

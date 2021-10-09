@@ -1,13 +1,13 @@
 package com.sparta.community.dto;
 
+import com.sparta.community.model.Comment;
 import com.sparta.community.model.Heart;
 import com.sparta.community.model.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @NoArgsConstructor

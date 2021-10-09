@@ -65,9 +65,9 @@
         </article>
         <article class="media">
             <div class="content">
-                <p class="contents-text" th:text="${post.getContents()}">
+                <div class="contents-text" th:text="${post.getContents()}">
                     본문
-                </p>
+                </div>
 
                 <i class="fa fa-commenting-o" aria-hidden="true"></i>
                 <span th:text="|댓글 : ${post.getCommentCount()}|">
@@ -121,28 +121,30 @@
             onclick="$('#edit-modal').removeClass('is-active')"></button>
 </div>
 <script th:inline="javascript">
+    //페이지 로딩시 게시글 정보 불러오고 대댓글 출력을 위해 재귀를 이용.
     $(document).ready(function () {
         let post = [[${post}]];
         $('#detail_date').text(date2str(post['createdAt']))
         $('#comment-container').empty()
-        // console.log(post)
         let comments = post['commentList']
+        console.log(comments)
         let temp_html = '';
         for (let i = 0; i < comments.length; i++) {
             let comment = comments[i];
-            temp_html += add_comment(comment)
+            temp_html += add_comment(comment);
             temp_html += `</div>
-                </article>`
+                </article>`;
         }
         temp_html += `</div>
-                </article>`
-        $('#comment-container').append(temp_html)
+                </article>`;
+        $('#comment-container').append(temp_html);
 
         heart_display()
     })
 
     let containerId = '';
 
+    //로그인한 사용자가 해당 게시물에 좋아요를 눌렀을 때, 하트가 채워지도록 출력
     function heart_display() {
         let post = [[${post}]];
         let user = [[${user}]];
@@ -164,6 +166,7 @@
         }
     }
 
+    //좋아요 요청
     function like_post() {
         let post = [[${post}]];
         let user = [[${user}]];
@@ -188,9 +191,28 @@
         })
     }
 
+    //escape 문자열로 변환해주는 함수
+    var entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;',
+        '`': '&#x60;',
+        '=': '&#x3D;'
+    };
+    function escapeHtml (string) {
+        return String(string).replace(/[&<>"'`=\/]/g,
+            function (s) { return entityMap[s]; }); }
+
+
+    //댓글 추가
     function add_comment(comment) {
         let user = [[${user}]]
         let temp_html = ''
+        let escapeContents = escapeHtml(`${comment.contents}`);
+        let escapeNickname = escapeHtml(`${comment.nickname}`);
         if (!user) {
             temp_html += `<article class="media">
                             <figure class="media-left">
@@ -200,17 +222,17 @@
                             </figure>
                             <div class="media-content">
                                 <div class="content">
-                                    <p>
-                                        <strong >${comment.nickname} </strong> <small>${date2str(comment.createdAt)}</small>
+                                    <div>
+                                        <strong >${escapeNickname} </strong> <small>${date2str(comment.createdAt)}</small>
                                         <br>`
             if (`${comment.deleted}` === "true") {
-                temp_html += `<small style="color: darkgray">${comment.contents}</small>`
+                temp_html += `<small style="color: darkgray">${escapeContents}</small>`
             } else {
-                temp_html += `${comment.contents}`
+                temp_html += `${escapeContents}`
             }
             temp_html += `<br>
                             <small><a onclick="pop_reply(${comment.id})">답글달기</a></small>
-                        </p>
+                        </div>
                     </div>`
         } else {
             let nickname = user['nickname']
@@ -223,22 +245,22 @@
                             </figure>
                             <div class="media-content">
                                 <div class="content">
-                                    <p>
-                                        <strong >${comment.nickname} </strong> <small style="margin-left:20px;">${date2str(comment.createdAt)}</small>
+                                    <div>
+                                        <strong >${escapeNickname} </strong> <small style="margin-left:20px;">${date2str(comment.createdAt)}</small>
                                         <br>`
             if (`${comment.deleted}` === "true") {
-                temp_html += `<small style="color: darkgray">${comment.contents}</small>`
+                temp_html += `<small style="color: darkgray">${escapeContents}</small>`
             } else {
-                temp_html += `${comment.contents}`
+                temp_html += `${escapeContents}`;
             }
             temp_html += `<br>
                             <small><a onclick="pop_reply(${comment.id})">답글달기</a></small>`
             if ((nickname === `${comment.nickname}`) && (`${comment.deleted}` === "false")) {
-                temp_html += `<small style="float: right; margin-right:10px;"><a onclick="pop_edit_reply(${comment.id}, '${comment.contents}')">수정</a></small>
+                temp_html += `<small style="float: right; margin-right:10px;"><a onclick="pop_edit_reply(${comment.id}, ${escapeContents})">수정</a></small>
                             <small style="float: right; margin-right:10px;"><a onclick="delete_reply(${comment.id})">삭제</a></small>`
             }
 
-            temp_html += ` </p>
+            temp_html += ` </div>
                             </div>
                             <article class="media is-hidden" id="reply-container${comment.id}">
                                 <figure class="media-left">
@@ -272,8 +294,10 @@
         return temp_html;
     }
 
+    //게시글 댓글
     function save_comment_post() {
         let contents = $('#post-reply').val()
+        let escape_contents = escapeHtml(contents);
         if (contents === '') {
             alert("내용을 입력해주세요")
             return;
@@ -285,7 +309,7 @@
             url: '/api/comments',
             data: JSON.stringify({
                 'postId': post['id'],
-                'contents': contents
+                'contents': escape_contents
             }),
             contentType: 'application/json',
             success: function (response) {
@@ -294,9 +318,11 @@
         })
     }
 
+    //대댓글
     function save_comment_comment(id) {
         let target = 'comment-reply' + id;
         let contents = $(`#${target}`).val()
+        let escape_contents = escapeHtml(contents);
         if (contents === '') {
             alert("내용을 입력해주세요")
             return;
@@ -309,7 +335,7 @@
             data: JSON.stringify({
                 'postId': post['id'],
                 'parentId': id,
-                'contents': contents
+                'contents': escape_contents
             }),
             contentType: 'application/json',
             success: function (response) {
@@ -318,6 +344,7 @@
         })
     }
 
+    //답글 작성 항목 출력
     function pop_reply(id) {
         console.log(id);
         let user = [[${user}]]
@@ -336,12 +363,14 @@
         $(`#${containerId}`).removeClass('is-hidden')
     }
 
+    //댓글 수정창 모달
     function pop_edit_reply(id, contents) {
         $('#edit-modal').addClass('is-active')
         $('#post-modal-id').val(id);
         $('#post-modal-edit').val(contents);
     }
 
+    //댓글 수정
     function edit_reply() {
         let commentId = $('#post-modal-id').val();
         let contents = $('#post-modal-edit').val()
@@ -362,6 +391,7 @@
         })
     }
 
+    //댓글 삭제
     function delete_reply(id) {
         let result = confirm("정말로 삭제하시겠습니까?")
         if (result) {
@@ -376,10 +406,12 @@
         }
     }
 
+    //수정 페이지
     function edit_page(id) {
         window.location.href = '/posts/edit/' + id;
     }
 
+    //게시글 삭제
     function delete_post(id) {
         let result = confirm("정말로 삭제하시겠습니까?")
         if (result) {

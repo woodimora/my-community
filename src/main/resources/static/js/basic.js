@@ -1,38 +1,48 @@
+//시작 페이지 1
 let page = 1;
 
+//로그인 폼으로 이동
 function loginForm() {
     window.location.href="/user/login";
 }
 
+//메인 화면
 function home() {
     window.location.href="/";
 }
 
+//회원가입 폼
 function registerForm() {
     window.location.href="/user/register";
 }
 
+//로그아웃 url
 function logout() {
     window.location.href="/user/logout";
 }
 
+//게시글 작성 폼
 function postForm() {
     window.location.href="/post-form";
 }
 
+//카카오 소셜 로그인
 function login_kakao() {
-    window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://localhost:8080/user/kakao/callback&response_type=code";
-    // window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://rlobean.shop/user/kakao/callback&response_type=code";
+    // window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://localhost:8080/user/kakao/callback&response_type=code";
+    window.location.href="https://kauth.kakao.com/oauth/authorize?client_id=34859b74f2e726356d9d9c561f7a8932&redirect_uri=http://rlobean.shop/user/kakao/callback&response_type=code";
 }
 
+//회원 정보 수정
 function edit_user() {
     window.location.href = "/user/edit"
 }
 
+//비밀번호에 아이디가 포함될 시
 function is_contains(value1, value2){
     return value1.indexOf(value2) >= 0;
 }
 
+//아이디의 유효성 검사
 function is_username(asValue) {
     var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{4,16}$/;
     return regExp.test(asValue);
@@ -191,6 +201,7 @@ function save_post() {
             window.location.replace("/")
         }
     })
+
 }
 
 function get_post_detail(post_id) {
